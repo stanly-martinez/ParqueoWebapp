@@ -8,7 +8,7 @@ import com.mycompany.parqueowebapp.app.entity.TipoEspacio;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.mockito.Mockito;
+import org.Mockito.mock;
 /**
  *
  * @author daniloues
