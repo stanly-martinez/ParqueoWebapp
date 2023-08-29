@@ -5,9 +5,10 @@
 package com.mycompany.parqueowebapp.control;
 
 import com.mycompany.parqueowebapp.app.entity.TipoEspacio;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
+import org.mockito.Mockito;
 /**
  *
  * @author daniloues
@@ -25,9 +26,9 @@ public class TipoEspacioBeanTest {
         System.out.println("create");
         TipoEspacio nuevo = new TipoEspacio();
         nuevo.setNombre("TIPO1");
-        
-        
+        EntityManager mockEM = Mockito.mock(EntityManager.class);
         TipoEspacioBean cut = new TipoEspacioBean();
+        cut.em=mockEM;
         cut.create(nuevo);
         fail("The test case is a prototype.");
     }
