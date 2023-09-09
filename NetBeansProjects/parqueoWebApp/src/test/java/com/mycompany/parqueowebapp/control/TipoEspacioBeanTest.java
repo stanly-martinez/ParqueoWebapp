@@ -424,7 +424,7 @@ public class TipoEspacioBeanTest {
         CriteriaBuilder mockCB = Mockito.mock(CriteriaBuilder.class);
         Mockito.when(mockEM.getCriteriaBuilder()).thenReturn(mockCB);
         CriteriaQuery mockCQ = Mockito.mock(CriteriaQuery.class);
-        Mockito.when(mockCB.createQuery(int.class)).thenReturn(mockCQ);
+        Mockito.when(mockCB.createQuery(TipoEspacio.class)).thenReturn(mockCQ);
         Mockito.when(mockEM.createQuery(mockCQ)).thenReturn(tq);
         // FIN DE SIMLUACION, INICIO DE METODO DE CONTEO
         int resultado = cut.count();

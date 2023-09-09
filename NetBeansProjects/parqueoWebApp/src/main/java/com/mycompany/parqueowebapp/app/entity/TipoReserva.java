@@ -16,6 +16,8 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  *
@@ -37,6 +39,8 @@ public class TipoReserva implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_tipo_reserva")
     private Integer idTipoReserva;
+    @NotBlank(message = "El nombre no puede estar en blanco.")
+    @Size(min = 3, max = 155, message = "El nombre debe poseer entre 3 y 155 caracteres.")
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "publico")

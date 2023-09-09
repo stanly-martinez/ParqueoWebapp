@@ -136,8 +136,8 @@ public abstract class AbstractDataAccess<T> {
         }
         if (em != null) {
             CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery cq = cb.createQuery(int.class);
-            Root<T> raiz = cq.from(int.class);
+            CriteriaQuery cq = cb.createQuery(tipoDato);
+            Root<T> raiz = cq.from(tipoDato);
             cq.select(raiz);
             TypedQuery q = em.createQuery(cq);
 
@@ -147,4 +147,24 @@ public abstract class AbstractDataAccess<T> {
         throw new IllegalStateException();
     }
 
+    public T findById(Object id) { // se planea paginar al pedir el primer registro y luego pedir una cantidad de registros
+        EntityManager em = null;
+        if (id != null) {
+            try {
+                em = getEntityManager();
+
+            } catch (Exception ex) {
+                Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            }
+            if (em != null) {
+                try {
+                    return (T)em.find(tipoDato, id);
+                } catch (Exception ex) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+                }
+            }
+            throw new IllegalStateException();
+        }
+        throw new IllegalArgumentException();
+    }
 }
