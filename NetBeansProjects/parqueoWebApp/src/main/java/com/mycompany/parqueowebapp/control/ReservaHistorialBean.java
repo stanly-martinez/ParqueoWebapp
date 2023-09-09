@@ -4,30 +4,28 @@
  */
 package com.mycompany.parqueowebapp.control;
 
-import com.mycompany.parqueowebapp.app.entity.TipoEspacio;
+import com.mycompany.parqueowebapp.app.entity.ReservaHistorial;
+import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.LocalBean;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
-
 /**
  *
  * @author daniloues
  */
 @Stateless
-@LocalBean
-public class TipoEspacioBean extends AbstractDataAccess<TipoEspacio> implements Serializable {
-    
+@Local
+public class ReservaHistorialBean extends AbstractDataAccess implements Serializable{
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     
-
     @Override
     public EntityManager getEntityManager(){
         return em;
 }
-    public TipoEspacioBean(){
-        super(TipoEspacio.class);
+    public ReservaHistorialBean(){
+        super(ReservaHistorial.class);
     }
+    
 }

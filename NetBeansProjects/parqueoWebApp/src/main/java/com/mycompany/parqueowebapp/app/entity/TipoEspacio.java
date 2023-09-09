@@ -20,11 +20,10 @@ import jakarta.persistence.Table;
  * @author daniloues
  */
 @Entity
-@Table(name = "tipo_espacio")
+@Table(name = "tipo_espacio", catalog = "parqueo", schema = "public")
 @NamedQueries({
-    @NamedQuery(name = "TipoEspacio.findAll", query = "SELECT t FROM TipoEspacio t"),
-    @NamedQuery(name = "TipoEspacio.findByIdTipoEspacio", query = "SELECT t FROM TipoEspacio t WHERE t.idTipoEspacio = :idTipoEspacio"),
-    @NamedQuery(name = "TipoEspacio.findByNombre", query = "SELECT t FROM TipoEspacio t WHERE t.nombre = :nombre")})
+    @NamedQuery(name = "TipoEspacio.findAll", query = "SELECT t FROM TipoEspacio t ORDER BY t.nombre ASC"),
+})
 public class TipoEspacio implements Serializable {
 
     private static final long serialVersionUID = 1L;
