@@ -1,0 +1,22 @@
+
+body {
+    margin: 2rem;
+}
+
+th {
+    background-color: white;
+}
+tr:nth-child(odd) {
+    background-color: blue;
+}
+th, td {
+    padding: 0.5rem;
+}
+td:hover {
+    background-color: lightsalmon;
+}
+
+.paginate_button {
+    border-radius: 0 !important;
+}
+
