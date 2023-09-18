@@ -26,7 +26,12 @@ public abstract class AbstractDataAccess<T> {
     public AbstractDataAccess(Class tipoDato) {
         this.tipoDato = tipoDato;
     }
-
+    
+    public String entityQuery(){
+        String entityName = "";
+        return entityName;
+    }
+    
     public abstract EntityManager getEntityManager();
 
     /**
@@ -81,6 +86,23 @@ public abstract class AbstractDataAccess<T> {
 
         return (Collections.EMPTY_LIST);
     }
+    
+    public List<T> findAll() { // se planea paginar al pedir el primer registro y luego pedir una cantidad de registros
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        
+            if (em != null) {
+                TypedQuery<T> q = em.createNamedQuery(entityQuery()+".findAll", tipoDato);
+                return q.getResultList();
+
+            }
+            throw new IllegalStateException();    
+    }
 
     public T modify(T registro) {
         EntityManager em = null;
@@ -113,7 +135,7 @@ public abstract class AbstractDataAccess<T> {
         if (registro != null) {
             if (em != null) {
                 try {
-                    em.remove(registro);
+                    
                     return;
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -146,7 +168,9 @@ public abstract class AbstractDataAccess<T> {
         }
         throw new IllegalStateException();
     }
+    
 
+    
     public T findById(Object id) { // se planea paginar al pedir el primer registro y luego pedir una cantidad de registros
         EntityManager em = null;
         if (id != null) {
@@ -158,7 +182,7 @@ public abstract class AbstractDataAccess<T> {
             }
             if (em != null) {
                 try {
-                    return (T)em.find(tipoDato, id);
+                    return (T) em.find(tipoDato, id);
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
                 }

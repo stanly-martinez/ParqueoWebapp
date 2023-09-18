@@ -14,13 +14,18 @@ import java.io.Serializable;
  *
  * @author daniloues
  */
+
 @Stateless
 @Local
-public class AreaBean extends AbstractDataAccess implements Serializable {
+public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     
     @Override
+    public String entityQuery(){
+        return ("Area");
+    }
+    
     public EntityManager getEntityManager(){
         return em;
 }

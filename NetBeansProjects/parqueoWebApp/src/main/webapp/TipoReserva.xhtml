@@ -6,27 +6,75 @@
       >
     <h:head>
         <title>Facelet Title</title>
+        <h:outputStylesheet library="styles" name="tabla.css"/>
     </h:head>
     <h:body>
-        <h:dataTable value="#{frmTipoReserva.listaRegistros}" var="r">
-            <h:column>
-                <f:facet name="header">
-                    ID
-                </f:facet>
-                <h:outputText value="#{r.idTipoReserva}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">
-                    NOMBRE
-                </f:facet>
-                <h:outputText value="#{r.nombre}"/>
-            </h:column>
-            <h:column>
-                <f:facet name="header">
-                    ESTADO
-                </f:facet>
-                <h:outputText value="#{r.publico?'ACTIVO':'INACTIVO'}"/>
-            </h:column>
-        </h:dataTable>
+        <h:panelGrid>
+
+            <h:form id="fmrTabla">
+                <h:dataTable value="#{frmTipoReserva.listaRegistros}" var="r">
+                    <h:column>
+                        <f:facet name="header">
+                            ID
+                        </f:facet>
+                        <h:outputText value="#{r.idTipoReserva}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            NOMBRE
+                        </f:facet>
+                        <h:outputText value="#{r.nombre}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            ESTADO
+                        </f:facet>
+                        <h:outputText value="#{r.publico?'ACTIVO':'INACTIVO'}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            DESCRIPCION
+                        </f:facet>
+                        <h:outputText value="#{r.descripcion}"/>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Seleccionar" actionListener="#{frmTipoReserva.btnSeleccionarHandler}">
+                            <f:attribute name="seleccionado" value="#{r.idTipoReserva}"/>
+                        </h:commandButton>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="ELIMINAR" actionListener="#{frmTipoReserva.btnEliminarHandler}">
+                            <f:attribute name="seleccionado" value="#{r.idTipoReserva}"/>
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="NUEVO" actionListener="#{frmTipoReserva.btnNuevoHandler}"/>
+                <h:commandButton value="CANCELAR" actionListener="#{frmTipoReserva.btnCancelarHandler}" rendered="#{not empty frmTipoReserva.registro}"/>
+            </h:form>
+            <h:panelGroup id="pnlDetalle">
+                <h:form rendered="#{not empty frmTipoReserva.registro}">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="ID" for="txtId"/>
+                        <h:inputText id="txtId" value="#{frmTipoReserva.registro.idTipoReserva}"
+                                     readonly="true" disabled="true"/>
+                        <h:outputLabel value="Nombre" for="txtNombre"/>
+                        <h:inputText id="txtNombre" value="#{frmTipoReserva.registro.nombre}"/>
+                        <h:outputLabel value="Publico" for="chkPublico"/>
+                        <h:selectBooleanCheckbox id="chkPublico" value="#{frmTipoReserva.registro.publico}"/>
+                        <h:outputLabel value="Descripcion" for="txtDescripcion"/>
+                        <h:inputTextarea id="txtDescripcion" value="#{frmTipoReserva.registro.descripcion}"
+                                         cols="70" rows="3"/>
+                    </h:panelGrid>
+
+                    <h:commandButton value="GUARDAR" actionListener="#{frmTipoReserva.btnNuevoHandler}"/>
+                    <h:commandButton value="MODIFICAR" actionListener="#{frmTipoReserva.btnNuevoHandler}"/>
+                    <h:commandButton value="ELIMINAR" actionListener="#{frmTipoReserva.btnEliminarHandler}">
+                        <f:attribute name="seleccionado" value="#{r.idTipoReserva}"/>
+                    </h:commandButton>
+
+                    <h:messages/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
     </h:body>
 </html>

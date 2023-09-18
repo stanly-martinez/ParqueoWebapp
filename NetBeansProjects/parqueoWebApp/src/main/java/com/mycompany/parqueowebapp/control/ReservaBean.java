@@ -9,7 +9,9 @@ import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -17,16 +19,25 @@ import java.io.Serializable;
  */
 @Stateless
 @Local
-public class ReservaBean extends AbstractDataAccess implements Serializable {
+public class ReservaBean extends AbstractDataAccess<Reserva> implements Serializable {
+
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
-    
+
+    public List<Reserva> mayor2(Object menor, Object mayor) {
+        TypedQuery q = em.createNamedQuery("Reserva.findLargerThan2", Reserva.class);
+        q.setParameter("desde", menor);
+        q.setParameter("hasta", mayor);
+        return q.getResultList();
+    }
+
     @Override
-    public EntityManager getEntityManager(){
+    public EntityManager getEntityManager() {
         return em;
-}
-    public ReservaBean(){
+    }
+
+    public ReservaBean() {
         super(Reserva.class);
     }
-    
+
 }

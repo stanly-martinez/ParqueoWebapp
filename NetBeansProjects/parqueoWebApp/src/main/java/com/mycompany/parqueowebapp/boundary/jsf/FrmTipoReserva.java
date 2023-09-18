@@ -45,20 +45,41 @@ public class FrmTipoReserva implements Serializable {
         
     }
     
-    public void btnSeleccionarHnadler(ActionEvent ae){
+    public void btnSeleccionarHandler(ActionEvent ae){
         Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
         if(id != null){
-            this.registro = (TipoReserva) trBean.findById(id);
+            this.registro = trBean.findById(id);
         }
     }
     
-    public void btnNuevoHandler(){
+    public void btnNuevoHandler(ActionEvent ae){
         this.registro = new TipoReserva();
     }
     
-    public void btnGuardarHandler(){
-        this.trBean.create(registro);
+    public void btnCancelarHandler(ActionEvent ae){
+        this.registro = null;
     }
+    
+    public void btnGuardarHandler(ActionEvent ae){
+        this.trBean.create(registro);
+        this.listaRegistros = trBean.findRange(0, 1000000);
+        this.registro = null;
+    }
+    
+    public void btnModificarHandler(ActionEvent ae){
+        TipoReserva modify = this.trBean.modify(registro);
+        if(modify!=null){
+            this.listaRegistros = trBean.findRange(0, 10000000);
+            this.registro = null;
+        }
+    }
+    
+    public void btnEliminarHandler(ActionEvent ae){
+        Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
+        this.trBean.borrarRegistro(id);
+        this.listaRegistros = trBean.findRange(0, 10000000);
+    }
+    
     public List<TipoReserva> getListaRegistros() {
         return listaRegistros;
     }

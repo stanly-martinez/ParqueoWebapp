@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.app.entity.TipoReserva;
+import jakarta.persistence.TypedQuery;
 
 /**
  *
@@ -18,10 +19,18 @@ import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 
 @Stateless
 @LocalBean
-public class TipoReservaBean extends AbstractDataAccess implements Serializable{
+public class TipoReservaBean extends AbstractDataAccess<TipoReserva> implements Serializable{
     
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
+    
+    public void borrarRegistro(Object id){
+    
+        TypedQuery<TipoReserva> q = em.createNamedQuery("TipoReserva.deteleById", tipoDato);
+        q.setParameter("idTipoReserva", id);
+        q.executeUpdate();
+    }
+    
     
     @Override
     public EntityManager getEntityManager(){
