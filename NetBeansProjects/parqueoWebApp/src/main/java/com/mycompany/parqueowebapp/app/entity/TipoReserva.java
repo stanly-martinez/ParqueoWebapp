@@ -30,7 +30,9 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "TipoReserva.findByIdTipoReserva", query = "SELECT t FROM TipoReserva t WHERE t.idTipoReserva = :idTipoReserva"),
     @NamedQuery(name = "TipoReserva.findByNombre", query = "SELECT t FROM TipoReserva t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoReserva.findByPublico", query = "SELECT t FROM TipoReserva t WHERE t.publico = :publico"),
-    @NamedQuery(name = "TipoReserva.findByDescripcion", query = "SELECT t FROM TipoReserva t WHERE t.descripcion = :descripcion")})
+    @NamedQuery(name = "TipoReserva.findByDescripcion", query = "SELECT t FROM TipoReserva t WHERE t.descripcion = :descripcion"),
+    @NamedQuery(name = "TipoReserva.deteleById", query = "DELETE FROM TipoReserva t WHERE t.idTipoReserva = :idTipoReserva")})
+
 public class TipoReserva implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="styles" name="tabla.css"/>
+    </h:head>
+    <h:body>
+        <h:panelGrid>
+
+            <h:form id="fmrTabla">
+                <h:dataTable value="#{frmReserva.listaRegistros}" var="r">
+                    <h:column>
+                        <f:facet name="header">
+                            ID
+                        </f:facet>
+                        <h:outputText value="#{r.idReserva}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            DESDE
+                        </f:facet>
+                        <h:outputText value="#{r.desde}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            HASTA
+                        </f:facet>
+                        <h:outputText value="#{r.hasta}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            OBSERVACIONES
+                        </f:facet>
+                        <h:outputText value="#{r.observaciones}"/>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Seleccionar" actionListener="#{frmReserva.btnSeleccionarHandler}">
+                            <f:attribute name="seleccionado" value="#{r.idReserva}"/>
+                        </h:commandButton>
+                    </h:column>
+                    <h:column>
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="NUEVO" actionListener="#{frmReserva.btnNuevoHandler}"/>
+                <h:commandButton value="MAYOR QUE 2" actionListener="#{frmReserva.btnMayor2Handler}">
+                    <f:attribute name="menor" value="#{r.desde}"/>
+                <f:attribute name="mayor" value="#{r.hasta}"/>
+                </h:commandButton>
+
+
+                <h:commandButton value="CANCELAR" actionListener="#{frmReserva.btnCancelarHandler}" rendered="#{not empty frmReserva.registro}"/>
+            </h:form>
+            <h:panelGroup id="pnlDetalle">
+                <h:form rendered="#{not empty frmReserva.registro}">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="ID" for="txtId"/>
+                        <h:inputText id="txtId" value="#{frmReserva.registro.idReserva}"
+                                     readonly="true" disabled="true"/>
+                        <h:outputLabel value="Observaciones" for="txtObservaciones"/>
+                        <h:inputTextarea id="txtObservaciones" value="#{frmReserva.registro.observaciones}"
+                                         cols="70" rows="3"/>
+                    </h:panelGrid>
+
+                    <h:commandButton value="GUARDAR" actionListener="#{frmReserva.btnNuevoHandler}"/>
+                    <h:commandButton value="MODIFICAR" actionListener="#{frmReserva.btnNuevoHandler}"/>
+                    <h:commandButton value="ELIMINAR" actionListener="#{frmReserva.btnEliminarHandler}">
+                        <f:attribute name="seleccionado" value="#{r.idReserva}"/>
+                    </h:commandButton>
+
+                    <h:messages/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+    </h:body>
+</html>

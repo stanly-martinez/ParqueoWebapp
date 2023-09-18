@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+    <h:head>
+        <title>Facelet Title</title>
+        <h:outputStylesheet library="styles" name="tabla.css"/>
+    </h:head>
+    <h:body>
+        <h:panelGrid>
+
+            <h:form id="fmrTabla">
+                <h:dataTable value="#{frmArea.listaRegistros}" var="r">
+                    <h:column>
+                        <f:facet name="header">
+                            ID
+                        </f:facet>
+                        <h:outputText value="#{r.idArea}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            NOMBRE
+                        </f:facet>
+                        <h:outputText value="#{r.nombre}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            DESCRIPCION
+                        </f:facet>
+                        <h:outputText value="#{r.descripcion}"/>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Seleccionar" actionListener="#{frmArea.btnSeleccionarHandler}">
+                            <f:attribute name="seleccionado" value="#{r.idArea}"/>
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+                <h:commandButton value="NUEVO" actionListener="#{frmArea.btnNuevoHandler}"/>
+                <h:commandButton value="CANCELAR" actionListener="#{frmArea.btnCancelarHandler}" rendered="#{not empty frmArea.registro}"/>
+            </h:form>
+            <h:panelGroup id="pnlDetalle">
+                <h:form rendered="#{not empty frmArea.registro}">
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="ID" for="txtId"/>
+                        <h:inputText id="txtId" value="#{frmArea.registro.idArea}"
+                                     readonly="true" disabled="true"/>
+                        <h:outputLabel value="Nombre" for="txtNombre"/>
+                        <h:inputText id="txtNombre" value="#{frmArea.registro.nombre}"/>
+                        <h:outputLabel value="Descripcion" for="txtDescripcion"/>
+                        <h:inputTextarea id="txtDescripcion" value="#{frmArea.registro.descripcion}"
+                                         cols="70" rows="3"/>
+                    </h:panelGrid>
+
+                    <h:commandButton value="GUARDAR" actionListener="#{frmArea.btnGuardarHandler}"/>
+                    <h:commandButton value="MODIFICAR" actionListener="#{frmArea.btnModificarHandler}"/>
+                    <h:commandButton value="ELIMINAR" actionListener="#{frmArea.btnEliminarHandler}"/>
+
+                    <h:messages/>
+                </h:form>
+            </h:panelGroup>
+        </h:panelGrid>
+    </h:body>
+</html>
