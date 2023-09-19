@@ -33,7 +33,7 @@ import jakarta.persistence.TemporalType;
     @NamedQuery(name = "Reserva.findByIdReserva", query = "SELECT r FROM Reserva r WHERE r.idReserva = :idReserva"),
     @NamedQuery(name = "Reserva.findByDesde", query = "SELECT r FROM Reserva r WHERE r.desde = :desde"),
     @NamedQuery(name = "Reserva.findByHasta", query = "SELECT r FROM Reserva r WHERE r.hasta = :hasta"),
-    @NamedQuery(name = "Reserva.findLargerThan2", query = "SELECT r FROM Reserva r WHERE FUNCTION('HOUR', ((r.desde = :desde) - (r.hasta = :hasta))>= 2"),
+    @NamedQuery(name = "Reserva.findLargerThan2", query = "SELECT r FROM Reserva r WHERE EXTRACT(HOUR FROM r.hasta - r.desde) > 2"),
     @NamedQuery(name = "Reserva.findByObservaciones", query = "SELECT r FROM Reserva r WHERE r.observaciones = :observaciones")})
 public class Reserva implements Serializable {
 

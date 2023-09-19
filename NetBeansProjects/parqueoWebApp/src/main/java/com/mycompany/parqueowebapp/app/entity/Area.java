@@ -29,7 +29,9 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "Area.findAll", query = "SELECT a FROM Area a"),
     @NamedQuery(name = "Area.findByIdArea", query = "SELECT a FROM Area a WHERE a.idArea = :idArea"),
     @NamedQuery(name = "Area.findByNombre", query = "SELECT a FROM Area a WHERE a.nombre = :nombre"),
-    @NamedQuery(name = "Area.findByDescripcion", query = "SELECT a FROM Area a WHERE a.descripcion = :descripcion")})
+    @NamedQuery(name = "Area.findByDescripcion", query = "SELECT a FROM Area a WHERE a.descripcion = :descripcion"),
+    @NamedQuery(name = "Area.encontrarIdAreaConMasEspaciosActivos", query = "SELECT a.idArea FROM Area a WHERE a.idArea =( SELECT MAX(e.idArea) FROM Espacio e WHERE e.activo = true GROUP BY a2.idArea ORDER BY COUNT(e) DESC")})
+
 public class Area implements Serializable {
 
     private static final long serialVersionUID = 1L;

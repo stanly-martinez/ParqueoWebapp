@@ -24,10 +24,8 @@ public class ReservaBean extends AbstractDataAccess<Reserva> implements Serializ
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
 
-    public List<Reserva> mayor2(Object menor, Object mayor) {
+    public List<Reserva> mayor2() {
         TypedQuery q = em.createNamedQuery("Reserva.findLargerThan2", Reserva.class);
-        q.setParameter("desde", menor);
-        q.setParameter("hasta", mayor);
         return q.getResultList();
     }
 

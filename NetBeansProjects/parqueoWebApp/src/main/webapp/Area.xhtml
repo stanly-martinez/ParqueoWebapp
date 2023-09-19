@@ -39,6 +39,7 @@
                 </h:dataTable>
                 <h:commandButton value="NUEVO" actionListener="#{frmArea.btnNuevoHandler}"/>
                 <h:commandButton value="CANCELAR" actionListener="#{frmArea.btnCancelarHandler}" rendered="#{not empty frmArea.registro}"/>
+                <h:commandButton value="MAYORACTIVO" actionListener="#{frmArea.btnMasActivosHandler}"/>
             </h:form>
             <h:panelGroup id="pnlDetalle">
                 <h:form rendered="#{not empty frmArea.registro}">

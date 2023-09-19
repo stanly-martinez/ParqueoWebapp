@@ -46,12 +46,7 @@
                     </h:column>
                 </h:dataTable>
                 <h:commandButton value="NUEVO" actionListener="#{frmReserva.btnNuevoHandler}"/>
-                <h:commandButton value="MAYOR QUE 2" actionListener="#{frmReserva.btnMayor2Handler}">
-                    <f:attribute name="menor" value="#{r.desde}"/>
-                <f:attribute name="mayor" value="#{r.hasta}"/>
-                </h:commandButton>
-
-
+                <h:commandButton value="MAYOR QUE 2" actionListener="#{frmReserva.btnMayor2Handler}"/>
                 <h:commandButton value="CANCELAR" actionListener="#{frmReserva.btnCancelarHandler}" rendered="#{not empty frmReserva.registro}"/>
             </h:form>
             <h:panelGroup id="pnlDetalle">

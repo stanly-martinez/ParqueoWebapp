@@ -9,7 +9,9 @@ import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import java.io.Serializable;
+import java.util.List;
 /**
  *
  * @author daniloues
@@ -20,6 +22,12 @@ import java.io.Serializable;
 public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
+    
+    
+    public int idAreaMasEspaciosActivos() {
+        TypedQuery q = em.createNamedQuery("Area.encontrarIdAreaConMasEspaciosActivos", Area.class);
+        return (Integer) q.getFirstResult();
+    }
     
     @Override
     public String entityQuery(){

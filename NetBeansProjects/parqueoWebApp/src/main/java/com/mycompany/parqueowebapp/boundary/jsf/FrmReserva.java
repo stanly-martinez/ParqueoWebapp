@@ -77,9 +77,7 @@ public class FrmReserva implements Serializable {
     }
 
     public void btnMayor2Handler(ActionEvent ae) {
-        Object id_menor = (Object) ae.getComponent().getAttributes().get("menor");
-        Object id_mayor = (Object) ae.getComponent().getAttributes().get("mayor");
-        this.listaRegistros = this.rBean.mayor2(id_menor,id_mayor);
+        this.listaRegistros = this.rBean.mayor2();
     }
 
     public List<Reserva> getListaRegistros() {
