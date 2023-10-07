@@ -7,13 +7,13 @@ th {
     background-color: white;
 }
 tr:nth-child(odd) {
-    background-color: blue;
+    background-color: gray;
 }
 th, td {
     padding: 0.5rem;
 }
 td:hover {
-    background-color: lightsalmon;
+    background-color: whitesmoke;
 }
 
 .paginate_button {

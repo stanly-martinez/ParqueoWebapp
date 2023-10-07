@@ -31,7 +31,8 @@ import jakarta.validation.constraints.Size;
     @NamedQuery(name = "TipoReserva.findByNombre", query = "SELECT t FROM TipoReserva t WHERE t.nombre = :nombre"),
     @NamedQuery(name = "TipoReserva.findByPublico", query = "SELECT t FROM TipoReserva t WHERE t.publico = :publico"),
     @NamedQuery(name = "TipoReserva.findByDescripcion", query = "SELECT t FROM TipoReserva t WHERE t.descripcion = :descripcion"),
-    @NamedQuery(name = "TipoReserva.deteleById", query = "DELETE FROM TipoReserva t WHERE t.idTipoReserva = :idTipoReserva")})
+    @NamedQuery(name = "TipoReserva.deteleById", query = "DELETE FROM TipoReserva t WHERE t.idTipoReserva = :idTipoReserva"),
+    @NamedQuery(name = "TipoReserva.count", query = "SELECT COUNT(t) FROM TipoReserva t")})
 
 public class TipoReserva implements Serializable {
 
@@ -133,5 +134,5 @@ public class TipoReserva implements Serializable {
     public String toString() {
         return "com.mycompany.parqueowebapp.TipoReserva[ idTipoReserva=" + idTipoReserva + " ]";
     }
-    
+
 }

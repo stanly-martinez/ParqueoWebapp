@@ -1,16 +1,14 @@
-
 package com.mycompany.parqueowebapp.boundary.jsf;
 
 import com.mycompany.parqueowebapp.app.entity.TipoReserva;
+import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import java.util.List;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.TipoReservaBean;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.event.ActionEvent;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
-import org.primefaces.model.LazyDataModel;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -18,83 +16,43 @@ import org.primefaces.model.LazyDataModel;
  */
 @Named
 @ViewScoped
-public class FrmTipoReserva implements Serializable {
+public class FrmTipoReserva extends frmAbstract<TipoReserva> implements Serializable {
     
     @Inject
     TipoReservaBean trBean;
     
-    List<TipoReserva> listaRegistros;
+    @Inject
+    FacesContext fc;
     
-    TipoReserva registro = null;
-    
-    LazyDataModel<TipoReserva> modelo;
-    
-    public FrmTipoReserva(){
-        
+    @Override
+    public AbstractDataAccess<TipoReserva> getDataAccess() {
+        return this.trBean;
     }
-    
-    @PostConstruct
-    public void inicializar(){
-        inicializarRegistros();
+
+    @Override
+    public FacesContext getFacesContext() {
+        return this.fc;
     }
-    
-    public void inicializarRegistros(){
-        
-        this.listaRegistros = trBean.findRange(0, 10000);    
-        
-        
-    }
-    
-    public void btnSeleccionarHandler(ActionEvent ae){
-        Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
-        if(id != null){
-            this.registro = trBean.findById(id);
+
+    @Override
+    public String getIdPorObjeto(TipoReserva object) {
+        if(object!=null && object.getIdTipoReserva()!=null){
+            return object.getIdTipoReserva().toString();
         }
+        return null;
     }
-    
-    public void btnNuevoHandler(ActionEvent ae){
+
+    @Override
+    public TipoReserva getObjetoPorId(String id) {
+        if(id!=null && this.modelo!= null && this.modelo.getWrappedData()!=null){
+            return this.modelo.getWrappedData().stream().filter(r->r.getIdTipoReserva().toString().equals(id)).collect(Collectors.toList()).get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public void instanciarRegistro() {
         this.registro = new TipoReserva();
     }
-    
-    public void btnCancelarHandler(ActionEvent ae){
-        this.registro = null;
-    }
-    
-    public void btnGuardarHandler(ActionEvent ae){
-        this.trBean.create(registro);
-        this.listaRegistros = trBean.findRange(0, 1000000);
-        this.registro = null;
-    }
-    
-    public void btnModificarHandler(ActionEvent ae){
-        TipoReserva modify = this.trBean.modify(registro);
-        if(modify!=null){
-            this.listaRegistros = trBean.findRange(0, 10000000);
-            this.registro = null;
-        }
-    }
-    
-    public void btnEliminarHandler(ActionEvent ae){
-        Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
-        this.trBean.borrarRegistro(id);
-        this.listaRegistros = trBean.findRange(0, 10000000);
-    }
-    
-    public List<TipoReserva> getListaRegistros() {
-        return listaRegistros;
-    }
 
-    public void setListaRegistros(List<TipoReserva> listaRegistros) {
-        this.listaRegistros = listaRegistros;
-    }
-
-    public TipoReserva getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(TipoReserva registro) {
-        this.registro = registro;
-    }
-    
-    
 }

@@ -75,10 +75,6 @@ public class FrmArea implements Serializable {
         }
     }
     
-    public void btnMasActivosHandler(ActionEvent ae){
-        int mayorValor = aBean.idAreaMasEspaciosActivos();
-        this.registro = aBean.findById(mayorValor);
-    }
     public void btnEliminarHandler(ActionEvent ae){
         this.aBean = null;
     }

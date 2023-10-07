@@ -24,11 +24,6 @@ public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
     EntityManager em;
     
     
-    public int idAreaMasEspaciosActivos() {
-        TypedQuery q = em.createNamedQuery("Area.encontrarIdAreaConMasEspaciosActivos", Area.class);
-        return (Integer) q.getFirstResult();
-    }
-    
     @Override
     public String entityQuery(){
         return ("Area");

@@ -135,7 +135,7 @@ public abstract class AbstractDataAccess<T> {
         if (registro != null) {
             if (em != null) {
                 try {
-                    
+                    em.remove(em.merge(registro));
                     return;
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -157,14 +157,9 @@ public abstract class AbstractDataAccess<T> {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         if (em != null) {
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery cq = cb.createQuery(tipoDato);
-            Root<T> raiz = cq.from(tipoDato);
-            cq.select(raiz);
-            TypedQuery q = em.createQuery(cq);
-
-            return q.getMaxResults();
-
+            TypedQuery<T> q = em.createNamedQuery(entityQuery()+".count", tipoDato);
+            Long value = (Long) q.getSingleResult();
+            return value.intValue();
         }
         throw new IllegalStateException();
     }
