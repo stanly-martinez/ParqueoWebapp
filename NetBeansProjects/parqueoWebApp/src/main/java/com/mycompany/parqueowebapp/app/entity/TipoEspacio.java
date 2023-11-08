@@ -4,6 +4,7 @@
  */
 package com.mycompany.parqueowebapp.app.entity;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import java.io.Serializable;
 import java.util.Collection;
 import jakarta.persistence.Basic;
@@ -20,7 +21,7 @@ import jakarta.persistence.Table;
  * @author daniloues
  */
 @Entity
-@Table(name = "tipo_espacio", catalog = "parqueo", schema = "public")
+@Table(name = "tipo_espacio", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "TipoEspacio.findAll", query = "SELECT t FROM TipoEspacio t ORDER BY t.nombre ASC"),
 })
@@ -58,7 +59,7 @@ public class TipoEspacio implements Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
+    @JsonbTransient
     public Collection<EspacioCaracteristica> getEspacioCaracteristicaCollection() {
         return espacioCaracteristicaCollection;
     }

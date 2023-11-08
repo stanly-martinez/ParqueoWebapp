@@ -23,7 +23,7 @@ import jakarta.persistence.TemporalType;
  * @author daniloues
  */
 @Entity
-@Table(name = "reserva_historial")
+@Table(name = "reserva_historial", schema = "public")
 @NamedQueries({
     @NamedQuery(name = "ReservaHistorial.findAll", query = "SELECT r FROM ReservaHistorial r"),
     @NamedQuery(name = "ReservaHistorial.findByIdReservaHistorial", query = "SELECT r FROM ReservaHistorial r WHERE r.idReservaHistorial = :idReservaHistorial"),

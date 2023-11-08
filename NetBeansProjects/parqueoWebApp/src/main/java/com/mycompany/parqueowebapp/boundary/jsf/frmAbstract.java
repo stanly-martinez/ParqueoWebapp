@@ -31,6 +31,41 @@ public abstract class frmAbstract<T> implements Serializable {
 
     public abstract FacesContext getFacesContext();
 
+    public int contar() {
+        int resultado = 0;
+        AbstractDataAccess<T> allBean = null;
+        try {
+
+            allBean = getDataAccess();
+            resultado = allBean.count();
+
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+
+        }
+        return resultado;
+    }
+    
+    
+    public List<T> cargarDatos(int primero, int tamanio) {
+        List<T> resultado = null;
+        try {
+
+            AbstractDataAccess<T> allBean = getDataAccess();
+            resultado = allBean.findRange(primero, tamanio);
+
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
+
+        } finally {
+            if (resultado == null) {
+                resultado = Collections.EMPTY_LIST;
+            }
+
+        }
+        return resultado;
+    }
+
     @PostConstruct
     public void inicializar() {
         inicializarRegistros();
@@ -41,35 +76,12 @@ public abstract class frmAbstract<T> implements Serializable {
         this.modelo = new LazyDataModel<T>() {
             @Override
             public int count(Map<String, FilterMeta> map) {
-                int resultado = 0;
-                AbstractDataAccess<T> allBean = null;
-                try {
-                    allBean = getDataAccess();
-                    resultado = allBean.count();
-                } catch (Exception ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-
-                }
-                return resultado;
+                return contar();
             }
 
             @Override
             public List<T> load(int primero, int tamanio, Map<String, SortMeta> map, Map<String, FilterMeta> map1) {
-                List<T> resultado = null;
-
-                try {
-                    AbstractDataAccess<T> allBean = getDataAccess();
-                    resultado = allBean.findRange(primero, tamanio);
-                } catch (Exception ex) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
-
-                } finally {
-                    if (resultado == null) {
-                        resultado = Collections.EMPTY_LIST;
-                    }
-                }
-
-                return resultado;
+                return cargarDatos(primero, tamanio);
             }
 
             @Override
@@ -139,26 +151,26 @@ public abstract class frmAbstract<T> implements Serializable {
         }
 
     }
-    
+
     public void btnGuardarHandler(ActionEvent ae) {
         FacesMessage mensaje = null;
         try {
             AbstractDataAccess<T> allBean = getDataAccess();
             allBean.create(registro);
             this.estado = EstadosCRUD.ninguno;
-            mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO,"Registro guardado con exito", "Se creo el registro");
+            mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registro guardado con exito", "Se creo el registro");
             getFacesContext().addMessage(null, mensaje);
             return;
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
 
         }
-        mensaje = new FacesMessage(FacesMessage.SEVERITY_ERROR,"No se pudo guardar el registro", "No se pudo almacenar el registro");
-            getFacesContext().addMessage(null, mensaje);
+        mensaje = new FacesMessage(FacesMessage.SEVERITY_ERROR, "No se pudo guardar el registro", "No se pudo almacenar el registro");
+        getFacesContext().addMessage(null, mensaje);
         this.registro = null;
 
     }
-    
+
     public T getRegistro() {
         return registro;
     }

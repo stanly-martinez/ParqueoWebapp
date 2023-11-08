@@ -22,8 +22,12 @@ public class TipoEspacioBean extends AbstractDataAccess<TipoEspacio> implements 
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     
-
+    
     @Override
+    public String entityQuery() {
+        return ("TipoEspacio");
+    }
+    
     public EntityManager getEntityManager(){
         return em;
 }

@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
  * @author daniloues
  */
 @Entity
-@Table(name = "tipo_reserva_secuencia")
+@Table(name = "tipo_reserva_secuencia, schema = public")
 @NamedQueries({
     @NamedQuery(name = "TipoReservaSecuencia.findAll", query = "SELECT t FROM TipoReservaSecuencia t"),
     @NamedQuery(name = "TipoReservaSecuencia.findByIdTipoReservaSecuencia", query = "SELECT t FROM TipoReservaSecuencia t WHERE t.idTipoReservaSecuencia = :idTipoReservaSecuencia"),

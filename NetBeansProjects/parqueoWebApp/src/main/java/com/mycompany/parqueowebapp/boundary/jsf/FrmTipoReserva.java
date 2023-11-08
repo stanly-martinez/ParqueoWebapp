@@ -9,6 +9,7 @@ import com.mycompany.parqueowebapp.control.TipoReservaBean;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import java.util.stream.Collectors;
+import org.primefaces.model.LazyDataModel;
 
 /**
  *
@@ -53,6 +54,11 @@ public class FrmTipoReserva extends frmAbstract<TipoReserva> implements Serializ
     @Override
     public void instanciarRegistro() {
         this.registro = new TipoReserva();
+    }
+    
+    @Override
+    public LazyDataModel<TipoReserva> getModelo() {
+        return super.getModelo();
     }
 
 }

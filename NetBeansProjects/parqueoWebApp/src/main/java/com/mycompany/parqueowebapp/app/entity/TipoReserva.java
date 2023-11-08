@@ -24,7 +24,7 @@ import jakarta.validation.constraints.Size;
  * @author daniloues
  */
 @Entity
-@Table(name = "tipo_reserva")
+@Table(name = "tipo_reserva, schema = public")
 @NamedQueries({
     @NamedQuery(name = "TipoReserva.findAll", query = "SELECT t FROM TipoReserva t"),
     @NamedQuery(name = "TipoReserva.findByIdTipoReserva", query = "SELECT t FROM TipoReserva t WHERE t.idTipoReserva = :idTipoReserva"),

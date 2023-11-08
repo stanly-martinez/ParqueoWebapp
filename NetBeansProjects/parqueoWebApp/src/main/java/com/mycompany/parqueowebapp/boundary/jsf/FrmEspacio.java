@@ -1,103 +1,96 @@
-
 package com.mycompany.parqueowebapp.boundary.jsf;
 
+import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.app.entity.Espacio;
-import jakarta.faces.view.ViewScoped;
+import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import jakarta.inject.Named;
-import java.util.List;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.EspacioBean;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.event.ActionEvent;
+import jakarta.enterprise.context.Dependent;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
-import org.primefaces.model.LazyDataModel;
-
+import java.util.List;
+import java.util.stream.Collectors;
 /**
  *
  * @author daniloues
  */
+import java.util.Collections;
+import org.primefaces.model.LazyDataModel;
+
 @Named
-@ViewScoped
-public class FrmEspacio implements Serializable {
-    
+@Dependent
+public class FrmEspacio extends frmAbstract<Espacio> implements Serializable {
+
     @Inject
     EspacioBean eBean;
+
+    @Inject
+    FacesContext fc;
     
-    List<Espacio> listaRegistros;
-    
-    Espacio registro = null;
-    
-    LazyDataModel<Espacio> modelo;
-    
-    public FrmEspacio(){
-        
+    Integer idArea;
+
+    public void setIdArea(Integer idArea) {
+        this.idArea = idArea;
     }
-    
-    @PostConstruct
-    public void inicializar(){
-        inicializarRegistros();
+
+    public Integer getIdArea() {
+        return idArea;
     }
-    
-    public void inicializarRegistros(){
-        
-        this.listaRegistros = eBean.findRange(0, 10000);    
-        
-        
-    }
-    
-    public void btnSeleccionarHandler(ActionEvent ae){
-        Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
-        if(id != null){
-            this.registro = eBean.findById(id);
+
+    @Override
+    public List<Espacio> cargarDatos(int primero, int tamanio) {
+        if (this.idArea != null) {
+            return this.eBean.findByIdArea(this.idArea, primero, tamanio);
         }
+        return Collections.EMPTY_LIST;
     }
-    
-    public void btnNuevoHandler(ActionEvent ae){
+
+    @Override
+    public int contar() {
+        if (this.idArea != null) {
+            return this.eBean.countByIdArea(this.idArea);
+        }
+        return 0;
+    }
+
+    @Override
+    public AbstractDataAccess<Espacio> getDataAccess() {
+        return eBean;
+    }
+
+    @Override
+    public FacesContext getFacesContext() {
+        return fc;
+    }
+
+    @Override
+    public String getIdPorObjeto(Espacio object) {
+        if (object != null && object.getIdEspacio() != null) {
+            return object.getIdEspacio().toString();
+        }
+        return null;
+    }
+
+    @Override
+    public Espacio getObjetoPorId(String id) {
+        if (id != null && this.modelo != null && this.modelo.getWrappedData() != null) {
+            return this.modelo.getWrappedData().stream().filter(r -> r.getIdEspacio().toString().equals(id)).collect(Collectors.toList()).get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public void instanciarRegistro() {
         this.registro = new Espacio();
-    }
-    
-    public void btnCancelarHandler(ActionEvent ae){
-        this.registro = null;
-    }
-    
-    public void btnGuardarHandler(ActionEvent ae){
-        this.eBean.create(registro);
-        this.listaRegistros = eBean.findRange(0, 1000000);
-        this.registro = null;
-    }
-    
-    public void btnModificarHandler(ActionEvent ae){
-        Espacio modify = this.eBean.modify(registro);
-        if(modify!=null){
-            this.listaRegistros = eBean.findRange(0, 10000000);
-            this.registro = null;
+        if (this.idArea != null) {
+            this.registro.setIdArea(new Area(idArea));
         }
-    }
-    
-    public void btnActivosHandler(ActionEvent ae){
-        this.listaRegistros = eBean.activosLista();
-    }
-    
-    public void btnEliminarHandler(ActionEvent ae){
-        this.eBean = null;
-    }
-    
-    
-    public List<Espacio> getListaRegistros() {
-        return listaRegistros;
+        this.registro.setActivo(true);
     }
 
-    public void setListaRegistros(List<Espacio> listaRegistros) {
-        this.listaRegistros = listaRegistros;
+    @Override
+    public LazyDataModel<Espacio> getModelo() {
+        return super.getModelo();
     }
-
-    public Espacio getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(Espacio registro) {
-        this.registro = registro;
-    }
-    
-    
 }
