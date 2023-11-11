@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// ABANDONADO****
 
 public abstract class AbstractResource<T> implements Serializable {
 

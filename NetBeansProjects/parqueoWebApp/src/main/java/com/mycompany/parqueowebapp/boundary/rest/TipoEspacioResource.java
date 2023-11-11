@@ -34,7 +34,10 @@ import java.util.logging.Logger;
  */
 @Path("tipo_espacio")
 public class TipoEspacioResource implements Serializable {
-
+    
+    // RECORDATORIO QUE LA VALIDACION DEPENDE DE OTRAS TABLAS, UNICAMENTE SE HA CREADO LA VALIDACION BASICA DE LA TABLA Y FECHAS
+    
+    
     @Inject
     TipoEspacioBean teBean;
     
@@ -111,7 +114,7 @@ public class TipoEspacioResource implements Serializable {
             } catch (Exception ex) {
                 Logger.getLogger(ex.getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
-            return Response.status(500).header("create-exception", registro.toString()).build();
+            return Response.status(500).header("modify-exception", registro.toString()).build();
         }
         return Response.status(422).
                 header("missing-parameter", "id").
@@ -119,23 +122,19 @@ public class TipoEspacioResource implements Serializable {
     }
 
     @DELETE
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response delete(TipoEspacio registro,
-            @Context UriInfo info
+    @Path("/{id}")
+    public Response delete(@PathParam("id")
+            final Integer idTipoEspacio
     ) {
-        if (registro != null && registro.getIdTipoEspacio() != null && registro.getNombre() != null) {
+        if (idTipoEspacio != null) {
             try {
-                teBean.delete(registro);
-                URI requestUri = info.getAbsolutePath();
+                teBean.deleteById(idTipoEspacio);
                 wsNC.actualizarTabla("La tabla ha cambiado");
-                return Response.status(Response.Status.CREATED).header("location", requestUri.toString()
-                        + "/" + registro.getIdTipoEspacio()
-                ).build();
+                return Response.status(Response.Status.CREATED).build();
             } catch (Exception ex) {
                 Logger.getLogger(ex.getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
             }
-            return Response.status(500).header("create-exception", registro.toString()).build();
+            return Response.status(500).header("delete-exception",idTipoEspacio).build();
         }
         return Response.status(422).
                 header("missing-parameter", "id").

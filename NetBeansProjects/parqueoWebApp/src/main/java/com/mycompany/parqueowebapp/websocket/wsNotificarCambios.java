@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Named
 @ApplicationScoped
-@ServerEndpoint(value = "/wstipo_espacio")
+@ServerEndpoint(value = "/wsnotificar_cambios")
 public class wsNotificarCambios implements Serializable{
     
     

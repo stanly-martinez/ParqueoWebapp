@@ -35,6 +35,9 @@ import java.util.logging.Logger;
 @Path("area")
 public class AreaResource implements Serializable {
 
+    // SE DEBE COMPROBAR QUE SE HAGA REFERENCIA A IDS PADRE QUE EXISTAN O SEAN NULOS *PENDIENTE
+    
+    
     @Inject
     AreaBean aBean;
     

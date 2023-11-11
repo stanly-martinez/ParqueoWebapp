@@ -34,7 +34,9 @@ import java.util.logging.Logger;
  */
 @Path("tipo_reserva")
 public class TipoReservaResource implements Serializable {
-
+    
+    
+    
     @Inject
     TipoReservaBean trBean;
     

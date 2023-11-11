@@ -6,6 +6,7 @@ package com.mycompany.parqueowebapp.boundary.rest;
 
 import com.mycompany.parqueowebapp.app.entity.Reserva;
 import com.mycompany.parqueowebapp.control.ReservaBean;
+import com.mycompany.parqueowebapp.control.comparadorFechas;
 import com.mycompany.parqueowebapp.websocket.wsNotificarCambios;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -34,15 +35,14 @@ import java.util.logging.Logger;
  */
 @Path("reserva")
 public class ReservaResource implements Serializable {
-    
-    ***// ESTA CLASE NO TIENE NOMBRE AL SER UNA TABLA CONEXION, CAMBIAR LOGICA DE ERROR***
+
     
     @Inject
     ReservaBean rBean;
     
     @Inject
     wsNotificarCambios wsNC;
-
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public List<Reserva> findRange(
@@ -50,10 +50,10 @@ public class ReservaResource implements Serializable {
             @DefaultValue(value = "0") int first,
             @QueryParam(value = "page_size")
             @DefaultValue(value = "100000") int pageSize) {
-
+        
         return rBean.findRange(first, pageSize);
     }
-
+    
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{id}")
@@ -71,14 +71,15 @@ public class ReservaResource implements Serializable {
                 header("missing-parameter", "id").
                 build();
     }
-
+    
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(Reserva registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReserva() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReserva() != null && registro.getIdEspacio() != null && registro.getIdTipoReserva() != null && registro.getHasta() != null && registro.getDesde() != null
+                && comparadorFechas.fechaValida(registro.getDesde()) && comparadorFechas.fechaValida(registro.getHasta())) {
             try {
                 rBean.create(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -95,14 +96,15 @@ public class ReservaResource implements Serializable {
                 header("missing-parameter", "id").
                 build();
     }
-
+    
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response replace(Reserva registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReserva() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReserva() != null && registro.getIdEspacio() != null && registro.getIdTipoReserva() != null && registro.getHasta() != null && registro.getDesde() != null
+                && comparadorFechas.fechaValida(registro.getDesde()) && comparadorFechas.fechaValida(registro.getHasta())) {
             try {
                 rBean.modify(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -119,14 +121,15 @@ public class ReservaResource implements Serializable {
                 header("missing-parameter", "id").
                 build();
     }
-
+    
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response delete(Reserva registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReserva() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReserva() != null && registro.getIdEspacio() != null && registro.getIdTipoReserva() != null && registro.getHasta() != null && registro.getDesde() != null
+                && comparadorFechas.fechaValida(registro.getDesde()) && comparadorFechas.fechaValida(registro.getHasta())) {
             try {
                 rBean.delete(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -143,5 +146,5 @@ public class ReservaResource implements Serializable {
                 header("missing-parameter", "id").
                 build();
     }
-
+    
 }

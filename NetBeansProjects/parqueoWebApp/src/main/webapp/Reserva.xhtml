@@ -1,74 +1,74 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      >
-    <h:head>
-        <title>Facelet Title</title>
-        <h:outputStylesheet library="styles" name="tabla.css"/>
-    </h:head>
-    <h:body>
-        <h:panelGrid>
+<composition xmlns="http://xmlns.jcp.org/jsf/facelets"
+             template="./WEB-INF/templates/raiz.xhtml"
+             xmlns:h="http://xmlns.jcp.org/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:btnparq="http://xmlns.jcp.org/jsf/composite/btnparq"
+             xmlns:f="jakarta.faces.core">
+    <define name="lados">
+        <h:form>
+            <p:splitter style="height: 850px; width:1000px;">
+                <p:splitterPanel size="250" minSize="250" >
 
-            <h:form id="fmrTabla">
-                <h:dataTable value="#{frmReserva.listaRegistros}" var="r">
-                    <h:column>
-                        <f:facet name="header">
-                            ID
-                        </f:facet>
-                        <h:outputText value="#{r.idReserva}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            DESDE
-                        </f:facet>
-                        <h:outputText value="#{r.desde}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            HASTA
-                        </f:facet>
-                        <h:outputText value="#{r.hasta}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">
-                            OBSERVACIONES
-                        </f:facet>
-                        <h:outputText value="#{r.observaciones}"/>
-                    </h:column>
-                    <h:column>
-                        <h:commandButton value="Seleccionar" actionListener="#{frmReserva.btnSeleccionarHandler}">
-                            <f:attribute name="seleccionado" value="#{r.idReserva}"/>
-                        </h:commandButton>
-                    </h:column>
-                    <h:column>
-                    </h:column>
-                </h:dataTable>
-                <h:commandButton value="NUEVO" actionListener="#{frmReserva.btnNuevoHandler}"/>
-                <h:commandButton value="MAYOR QUE 2" actionListener="#{frmReserva.btnMayor2Handler}"/>
-                <h:commandButton value="CANCELAR" actionListener="#{frmReserva.btnCancelarHandler}" rendered="#{not empty frmReserva.registro}"/>
-            </h:form>
-            <h:panelGroup id="pnlDetalle">
-                <h:form rendered="#{not empty frmReserva.registro}">
-                    <h:panelGrid columns="2">
-                        <h:outputLabel value="ID" for="txtId"/>
-                        <h:inputText id="txtId" value="#{frmReserva.registro.idReserva}"
-                                     readonly="true" disabled="true"/>
-                        <h:outputLabel value="Observaciones" for="txtObservaciones"/>
-                        <h:inputTextarea id="txtObservaciones" value="#{frmReserva.registro.observaciones}"
-                                         cols="70" rows="3"/>
-                    </h:panelGrid>
 
-                    <h:commandButton value="GUARDAR" actionListener="#{frmReserva.btnNuevoHandler}"/>
-                    <h:commandButton value="MODIFICAR" actionListener="#{frmReserva.btnNuevoHandler}"/>
-                    <h:commandButton value="ELIMINAR" actionListener="#{frmReserva.btnEliminarHandler}">
-                        <f:attribute name="seleccionado" value="#{r.idReserva}"/>
-                    </h:commandButton>
 
-                    <h:messages/>
-                </h:form>
-            </h:panelGroup>
-        </h:panelGrid>
-    </h:body>
-</html>
+                    <h:form>
+
+                        // SE UTILIZARA PARA MOSTRAR LAS AREAS PADRE (FRENTE Y CANCHA)
+                        <p:selectOneMenu id="listMenu" value="#{frmReserva.areaSeleccionada}" styleClass="movie-container" var="a">
+                            
+                            //****** RECORDATORIO QUE ESTA GRABADO CUALES AREAS PADRES SE MOSTRARAN, SE SUPONEN SOLO 2***************
+                            
+                            <f:selectItem itemLabel="#{frmReserva.frmArea.nombresPadres.get(0)}" itemValue="1" />
+                            <f:selectItem itemLabel="#{frmReserva.frmArea.nombresPadres.get(1)}" itemValue="2" />
+
+                            
+                            <p:ajax update="primeraSeleccin" listener="#{frmReserva.areaSeleccionada}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel id="primeraSeleccion" value="#{frmReserva.areaSeleccionada}"/>
+
+
+
+                        // SE UTILIZARA PARA MOSTRAR LAS SUBAREAS (FRENTE-> ADMON Y PUBLICO) Y (CANCHA->CHALET Y TALENTOS)
+                        <p:selectOneMenu id="listMenu1" value="#{bean.selectedList}" styleClass="movie-container">
+
+                            <f:selectItem itemLabel="Select List 1" itemValue="1" />
+                            <f:selectItem itemLabel="Select List 2" itemValue="2" />
+                            <f:selectItem itemLabel="Select List 3" itemValue="3" />
+                            <f:selectItem itemLabel="Select List 4" itemValue="4" /> 
+
+
+                            <p:ajax update="listButton" listener="#{bean.onListChange}" />
+                        </p:selectOneMenu>
+
+
+                        // SE UTILIZARA PARA FILTRAR LOS ESPACIOS EN BASE A TECHADOS Y OTRAS CARACTERISTICAS
+                        <p:selectOneButton id="listButton" value="#{bean.selectedItem}">
+                            <f:selectItems value="#{bean.listItems}" />
+                            <p:ajax update="panel" listener="#{bean.onItemChange}" />
+                        </p:selectOneButton>
+
+                        <p:panel id="panel" header="Package Emode" style="background-color: red;">
+                            <h:outputText value="#{bean.panelContent}" />
+                        </p:panel>
+                    </h:form>
+                </p:splitterPanel>
+                <p:splitterPanel size="500" minSize="500">
+
+
+                    // SE UTILIZARA PARA MOSTRAR LOS ESPACIOS EN CADA SUBAREA, DEBE SER FILTRADO EN BASE A LAS CARACTERISTICAS SELECCIONADAS
+                    <p:dataGrid value="#{bean.seats}" var="seat" columns="4" layout="grid">
+                        <p:panel styleClass="#{seat.status == 'selected' ? 'seat selected' : seat.status == 'occupied' ? 'seat occupied' : 'seat'}">
+                            <!-- Content for the seat goes here -->
+                            <p:outputLabel value="#{seat.label}" />
+                        </p:panel>
+                    </p:dataGrid>   
+                </p:splitterPanel>
+            </p:splitter>
+        </h:form>
+
+
+    </define>
+</composition>
+

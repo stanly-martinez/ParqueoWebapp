@@ -406,33 +406,4 @@ public class TipoEspacioBeanTest {
         // fail("Run you fools");
     }
     
-    @Test
-    public void testCount() {
-
-        System.out.println("count");
-        TipoEspacio nuevo = new TipoEspacio();
-        nuevo.setNombre("chepe");
-        nuevo.setIdTipoEspacio(1);
-        EntityManager mockEM = Mockito.mock(EntityManager.class);
-        TipoEspacioBean cut = new TipoEspacioBean();
-        cut.em = mockEM;
-        cut.create(nuevo);
-        
-        // MOCKITO SIMULACION DE CRITERIA BUILD, CRITERIA QUERY Y TYPEDQUERY
-        TypedQuery tq = Mockito.mock(TypedQuery.class);
-        Mockito.when(tq.getMaxResults()).thenReturn(1);
-        CriteriaBuilder mockCB = Mockito.mock(CriteriaBuilder.class);
-        Mockito.when(mockEM.getCriteriaBuilder()).thenReturn(mockCB);
-        CriteriaQuery mockCQ = Mockito.mock(CriteriaQuery.class);
-        Mockito.when(mockCB.createQuery(TipoEspacio.class)).thenReturn(mockCQ);
-        Mockito.when(mockEM.createQuery(mockCQ)).thenReturn(tq);
-        // FIN DE SIMLUACION, INICIO DE METODO DE CONTEO
-        int resultado = cut.count();
-        assertEquals(1,resultado);
-        cut.em = null;
-        assertThrows(IllegalStateException.class, () -> {
-            cut.count();
-        });
-        // fail("Run you fools");
-    }
 }

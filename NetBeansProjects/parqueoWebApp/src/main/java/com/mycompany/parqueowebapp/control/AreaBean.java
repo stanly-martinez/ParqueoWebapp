@@ -46,6 +46,16 @@ public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
         }
         return Collections.EMPTY_LIST;
     }
+    
+    public List<String> findNombresPadres(){
+        if(em !=null){
+            Query q = em.createNamedQuery("Area.findNombresPadres");
+            return q.getResultList();
+            
+        }
+        return Collections.EMPTY_LIST;
+    }
+    
 
     @Override
     public String entityQuery() {

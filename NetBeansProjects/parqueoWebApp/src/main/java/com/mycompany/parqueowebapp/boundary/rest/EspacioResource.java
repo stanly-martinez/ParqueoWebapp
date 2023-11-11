@@ -34,7 +34,9 @@ import java.util.logging.Logger;
  */
 @Path("espacio")
 public class EspacioResource implements Serializable {
-
+    
+    // RECORDATORIO QUE LA VALIDACION DEPENDE DE OTRAS TABLAS, UNICAMENTE SE HA CREADO LA VALIDACION BASICA DE LA TABLA Y FECHAS
+    
     @Inject
     EspacioBean eBean;
     
@@ -76,7 +78,7 @@ public class EspacioResource implements Serializable {
     public Response create(Espacio registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null && registro.getActivo() != null && registro.getIdArea() != null ) {
             try {
                 eBean.create(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -100,7 +102,7 @@ public class EspacioResource implements Serializable {
     public Response replace(Espacio registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null && registro.getActivo() != null && registro.getIdArea() != null) {
             try {
                 eBean.modify(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -124,7 +126,7 @@ public class EspacioResource implements Serializable {
     public Response delete(Espacio registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacio() != null && registro.getNombre() != null && registro.getActivo() != null && registro.getIdArea() != null) {
             try {
                 eBean.delete(registro);
                 URI requestUri = info.getAbsolutePath();

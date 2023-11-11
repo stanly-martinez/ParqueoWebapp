@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Stateless
 @Local
-public class ReservaHistorialBean extends AbstractDataAccess implements Serializable{
+public class ReservaHistorialBean extends AbstractDataAccess<ReservaHistorial> implements Serializable{
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     

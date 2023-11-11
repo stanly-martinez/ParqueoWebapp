@@ -34,7 +34,7 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
     
     TreeNode raiz;
     TreeNode nodoSeleccionado;
-
+    List<String> nombresPadres;
     @PostConstruct
     
     @Override
@@ -42,14 +42,23 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
         super.inicializar();
         this.raiz = new DefaultTreeNode("Areas", null);
         List<Area> lista = aBean.findByIdPadre(null, 0, 1000000);
+        
         if (lista != null && !lista.isEmpty()) {
             for (Area next : lista) {
                 if (next.getIdAreaPadre() == null) {
                     this.generarArbol(raiz, next);
                 }
             }
-
+            
         }
+        
+        
+        nombresPadres = aBean.findNombresPadres();
+    
+    }
+
+    public List<String> getNombresPadres() {
+        return nombresPadres;
     }
 
     public void generarArbol(TreeNode padre, Area actual) {
@@ -116,9 +125,21 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
             this.frmEspacio.setIdArea(this.registro.getIdArea());
         }
     }
+    
 
+    
+    
+    @Override
+    public Area getRegistro(){
+        return super.registro;
+    }
+    
     public FrmEspacio getFrmEspacio() {
         return frmEspacio;
     }
 
+        
+    
+    
+    
 }

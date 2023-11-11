@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Stateless
 @Local
-public class TipoReservaSecuenciaBean extends AbstractDataAccess implements Serializable{
+public class TipoReservaSecuenciaBean extends AbstractDataAccess<TipoReservaSecuencia> implements Serializable{
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     

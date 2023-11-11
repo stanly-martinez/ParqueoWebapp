@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>Fetch Example</title>
+        <link rel="stylesheet" type="text/css" href="resources/styles/style.css">
     </head>
     <body>
         <h1>Fetch Example</h1>
@@ -39,7 +40,7 @@
 
         <button id="GETButton">Get TipoEspacio</button>
 
-
+        <div id="cambioNotificacion"></div>
         <script>
             // TABLA TIPO ESPACIO
             function addRowToTable(data) {
@@ -62,12 +63,11 @@
                     nombre: nombre
                 };
 
-                fetch('http://localhost:8080/parqueoWebApp/resources/tipo_espacio', {
-                    method: 'POST',
+                fetch('http://localhost:8080/parqueoWebApp/resources/tipo_espacio/'+document.getElementById('idTipoEspacioInput').value, {
+                    method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
+                    }
                 })
                         .then(response => {
                             if (response.ok) {
@@ -81,7 +81,6 @@
                         });
             });
 
-            // GET EN TIPO_ESPACIO
 
             // GET EN TIPO_ESPACIO
             document.getElementById('GETButton').addEventListener('click', function () {
@@ -116,7 +115,7 @@
 
 
             //WEBSOCKET CALL PARA ACTUALIZAR EN EL RESTO DE CLIENTES
-            var ws = new WebSocket("ws://localhost:8080/parqueoWebApp/wstipo_espacio");
+            var ws = new WebSocket("ws://localhost:8080/parqueoWebApp/wsnotificar_cambios");
             ws.onmessage = function (e) {
                 console.log("Mensaje recibido", e);
                 fetch('http://localhost:8080/parqueoWebApp/resources/tipo_espacio', {
@@ -146,7 +145,11 @@
                         .catch(error => {
                             document.getElementById('resultGET').textContent = 'Hubo un error: ' + error;
                         });
-            };
+                        document.getElementById('cambioNotificacion').textContent = 'NOTIFICACION' + e.toString();
+                        
+    
+    
+    };
         </script>
     </body>
 </html>

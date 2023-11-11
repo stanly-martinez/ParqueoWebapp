@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @Stateless
 @Local
-public class EspacioCaracteristicaBean extends AbstractDataAccess implements Serializable {
+public class EspacioCaracteristicaBean extends AbstractDataAccess<EspacioCaracteristica> implements Serializable {
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
     

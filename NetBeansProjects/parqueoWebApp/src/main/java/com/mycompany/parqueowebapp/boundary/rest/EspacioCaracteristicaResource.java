@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 @Path("espacio_caracteristica")
 public class EspacioCaracteristicaResource implements Serializable {
     
-    ***// ESTA CLASE NO TIENE NOMBRE AL SER UNA TABLA CONEXION, CAMBIAR LOGICA DE ERROR***
+    //***// ESTA CLASE NO TIENE NOMBRE AL SER UNA TABLA CONEXION, CAMBIAR LOGICA DE ERROR***
     
     @Inject
     EspacioCaracteristicaBean ecBean;
@@ -79,7 +79,7 @@ public class EspacioCaracteristicaResource implements Serializable {
             @Context UriInfo info
     ) {
         
-        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getIdTipoEspacio() != null && registro.getIdEspacio() != null && registro.getValor() != null) {
             try {
                 ecBean.create(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -103,7 +103,7 @@ public class EspacioCaracteristicaResource implements Serializable {
     public Response replace(EspacioCaracteristica registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getIdTipoEspacio() != null && registro.getIdEspacio() != null && registro.getValor() != null) {
             try {
                 ecBean.modify(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -127,7 +127,7 @@ public class EspacioCaracteristicaResource implements Serializable {
     public Response delete(EspacioCaracteristica registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdEspacioCaracteristica() != null && registro.getIdTipoEspacio() != null && registro.getIdEspacio() != null && registro.getValor() != null) {
             try {
                 ecBean.delete(registro);
                 URI requestUri = info.getAbsolutePath();

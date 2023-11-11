@@ -6,6 +6,7 @@ package com.mycompany.parqueowebapp.boundary.rest;
 
 import com.mycompany.parqueowebapp.app.entity.ReservaHistorial;
 import com.mycompany.parqueowebapp.control.ReservaHistorialBean;
+import com.mycompany.parqueowebapp.control.comparadorFechas;
 import com.mycompany.parqueowebapp.websocket.wsNotificarCambios;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -36,7 +37,8 @@ import java.util.logging.Logger;
 public class ReservaHistorialResource implements Serializable {
     
     
-    ***// ESTA CLASE NO TIENE NOMBRE AL SER UNA TABLA CONEXION, CAMBIAR LOGICA DE ERROR***
+    //***// ESTA CLASE NO TIENE NOMBRE AL SER UNA TABLA CONEXION, CAMBIAR LOGICA DE ERROR***
+    // RECORDATORIO QUE LA VALIDACION DEPENDE DE OTRAS TABLAS, UNICAMENTE SE HA CREADO LA VALIDACION BASICA DE LA TABLA Y FECHAS
     
     @Inject
     ReservaHistorialBean rhBean;
@@ -79,7 +81,7 @@ public class ReservaHistorialResource implements Serializable {
     public Response create(ReservaHistorial registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReservaHistorial() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReservaHistorial() != null && registro.getActivo() != null && registro.getIdReserva() != null && registro.getIdTipoReservaSecuencia() != null && registro.getFechaAlcanzado() != null && comparadorFechas.fechaValida(registro.getFechaAlcanzado())) {
             try {
                 rhBean.create(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -103,7 +105,7 @@ public class ReservaHistorialResource implements Serializable {
     public Response replace(ReservaHistorial registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReservaHistorial() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReservaHistorial() != null && registro.getActivo() != null && registro.getIdReserva() != null && registro.getIdTipoReservaSecuencia() != null && registro.getFechaAlcanzado() != null && comparadorFechas.fechaValida(registro.getFechaAlcanzado())) {
             try {
                 rhBean.modify(registro);
                 URI requestUri = info.getAbsolutePath();
@@ -127,7 +129,7 @@ public class ReservaHistorialResource implements Serializable {
     public Response delete(ReservaHistorial registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdReservaHistorial() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdReservaHistorial() != null && registro.getActivo() != null && registro.getIdReserva() != null && registro.getIdTipoReservaSecuencia() != null && registro.getFechaAlcanzado() != null && comparadorFechas.fechaValida(registro.getFechaAlcanzado())) {
             try {
                 rhBean.delete(registro);
                 URI requestUri = info.getAbsolutePath();

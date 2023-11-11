@@ -34,7 +34,9 @@ import java.util.logging.Logger;
  */
 @Path("tipo_reserva_secuencia")
 public class TipoReservaSecuenciaResource implements Serializable {
-
+    
+    // RECORDATORIO QUE LA VALIDACION DEPENDE DE OTRAS TABLAS, UNICAMENTE SE HA CREADO LA VALIDACION BASICA DE LA TABLA Y FECHAS
+    
     @Inject
     TipoReservaSecuenciaBean trsBean;
     
@@ -76,7 +78,7 @@ public class TipoReservaSecuenciaResource implements Serializable {
     public Response create(TipoReservaSecuencia registro,
             @Context UriInfo info
     ) {
-        if (registro != null && registro.getIdTipoReservaSecuencia() != null && registro.getNombre() != null) {
+        if (registro != null && registro.getIdTipoReservaSecuencia() != null && registro.getNombre() != null && registro.getIdTipoReserva() != null && registro.getIndicaFin() != null && registro.getIdTipoReservaSecuenciaPadre() != null) {
             try {
                 trsBean.create(registro);
                 URI requestUri = info.getAbsolutePath();

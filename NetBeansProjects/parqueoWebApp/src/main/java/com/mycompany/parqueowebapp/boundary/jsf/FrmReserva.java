@@ -1,14 +1,15 @@
 package com.mycompany.parqueowebapp.boundary.jsf;
 
 import com.mycompany.parqueowebapp.app.entity.Reserva;
+import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import java.util.List;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import jakarta.annotation.PostConstruct;
-import jakarta.faces.event.ActionEvent;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import java.util.stream.Collectors;
 import org.primefaces.model.LazyDataModel;
 
 /**
@@ -17,83 +18,94 @@ import org.primefaces.model.LazyDataModel;
  */
 @Named
 @ViewScoped
-public class FrmReserva implements Serializable {
+public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     @Inject
     ReservaBean rBean;
-
-    List<Reserva> listaRegistros;
-
-    Reserva registro = null;
-
-    LazyDataModel<Reserva> modelo;
-
-    public FrmReserva() {
-
+    
+    @Inject
+    FacesContext fc;
+    
+    // SE NECESITARAN LOS ESPACIOS DISPONIBLES PERO SE BUSCARAN EN BASE AL AREA SELECCIONADA
+    @Inject
+    FrmArea frmArea;
+    
+    // SE NECESITARA AGREGAR LAS RESERVAS EXITOSAS AL HISTORIAL
+    //@Inject
+    //FrmReservaHistorial frmRH;
+    
+    // SE NECESITARA INFORMAR SOBRE LOS TIPOS DE RESERVA
+    @Inject
+    FrmTipoReserva frmTR;
+    
+    //OBTENDREMOS EL AREA QUE ESTA SIENDO SELECCIONADA
+    
+    // SE INICIARA ESTE FORMULARIO CON LAS LISTAS DE AREA, SUBAREAS Y ESPACIOS
+    int areaSeleccionada = 0;
+    
+    
+    
+    @Override
+    public AbstractDataAccess<Reserva> getDataAccess() {
+        return this.rBean;
+        
     }
 
-    @PostConstruct
-    public void inicializar() {
-        inicializarRegistros();
+
+    
+    @Override
+    public FacesContext getFacesContext() {
+        return this.fc;
     }
 
-    public void inicializarRegistros() {
-
-        this.listaRegistros = rBean.findRange(0, 10000);
-
-    }
-
-    public void btnSeleccionarHandler(ActionEvent ae) {
-        Integer id = (Integer) ae.getComponent().getAttributes().get("seleccionado");
-        if (id != null) {
-            this.registro = rBean.findById(id);
+    @Override
+    public String getIdPorObjeto(Reserva object) {
+        if(object!=null && object.getIdTipoReserva()!=null){
+            return object.getIdTipoReserva().toString();
         }
+        return null;
+        
     }
 
-    public void btnNuevoHandler(ActionEvent ae) {
+    @Override
+    public Reserva getObjetoPorId(String id) {
+        if(id!=null && this.modelo!= null && this.modelo.getWrappedData()!=null){
+            return this.modelo.getWrappedData().stream().filter(r->r.getIdTipoReserva().toString().equals(id)).collect(Collectors.toList()).get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public void instanciarRegistro() {
         this.registro = new Reserva();
+        
+    }
+    
+    @Override
+    public LazyDataModel<Reserva> getModelo() {
+        return super.getModelo();
     }
 
-    public void btnCancelarHandler(ActionEvent ae) {
-        this.registro = null;
+    public FrmArea getFrmArea() {
+        return frmArea;
     }
 
-    public void btnGuardarHandler(ActionEvent ae) {
-        this.rBean.create(registro);
-        this.listaRegistros = rBean.findRange(0, 1000000);
-        this.registro = null;
+    public FrmTipoReserva getFrmTR() {
+        return frmTR;
     }
 
-    public void btnModificarHandler(ActionEvent ae) {
-        Reserva modify = this.rBean.modify(registro);
-        if (modify != null) {
-            this.listaRegistros = rBean.findRange(0, 10000000);
-            this.registro = null;
-        }
+    public int getAreaSeleccionada() {
+        return areaSeleccionada;
     }
 
-    public void btnEliminarHandler(ActionEvent ae) {
-
+    public void setAreaSeleccionada(int areaSeleccionada) {
+        this.areaSeleccionada = areaSeleccionada;
     }
 
-    public void btnMayor2Handler(ActionEvent ae) {
-        this.listaRegistros = this.rBean.mayor2();
-    }
-
-    public List<Reserva> getListaRegistros() {
-        return listaRegistros;
-    }
-
-    public void setListaRegistros(List<Reserva> listaRegistros) {
-        this.listaRegistros = listaRegistros;
-    }
-
-    public Reserva getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(Reserva registro) {
-        this.registro = registro;
-    }
-
+    
+    
+    
+    
+    
+    
 }
