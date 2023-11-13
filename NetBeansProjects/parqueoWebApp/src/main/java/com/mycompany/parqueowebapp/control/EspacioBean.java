@@ -56,6 +56,22 @@ public class EspacioBean extends AbstractDataAccess<Espacio> implements Serializ
         return 0;
     }
 
+    public List<String> findNombresByIdArea(final Integer idArea) {
+
+        if (idArea != null) {
+            if (em != null) {
+
+                Query q = em.createNamedQuery("Espacio.findNombresByIdArea");
+                q.setParameter("idArea", idArea);
+                return q.getResultList();
+
+            }
+
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
     @Override
     public String entityQuery() {
         return ("Espacio");

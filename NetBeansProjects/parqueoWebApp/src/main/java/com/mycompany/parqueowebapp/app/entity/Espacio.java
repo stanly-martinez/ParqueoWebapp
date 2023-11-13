@@ -30,7 +30,9 @@ import jakarta.persistence.Table;
     @NamedQuery(name = "Espacio.findByIdArea", query = "SELECT e FROM Espacio e WHERE e.idArea.idArea = :idArea ORDER BY e.nombre ASC"),
     @NamedQuery(name = "Espacio.countByIdArea", query = "SELECT COUNT (e.idEspacio) FROM Espacio e WHERE e.idArea.idArea = :idArea"),
     @NamedQuery(name = "Espacio.findByIdEspacio", query = "SELECT e FROM Espacio e WHERE e.idEspacio = :idEspacio"),
-    @NamedQuery(name = "Espacio.findByActivo", query = "SELECT e FROM Espacio e WHERE e.activo = :activo")})
+    @NamedQuery(name = "Espacio.findByActivo", query = "SELECT e FROM Espacio e WHERE e.activo = :activo"),
+    @NamedQuery(name = "Espacio.findNombresByIdArea", query = "SELECT e.nombre FROM Espacio e WHERE e.idArea.idArea = :idArea ORDER BY e.nombre ASC")
+})
 public class Espacio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -140,5 +142,5 @@ public class Espacio implements Serializable {
     public String toString() {
         return "com.mycompany.parqueowebapp.Espacio[ idEspacio=" + idEspacio + " ]";
     }
-    
+
 }
