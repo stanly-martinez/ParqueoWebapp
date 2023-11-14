@@ -29,6 +29,7 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "reserva", schema = "public")
 @NamedQueries({
+    @NamedQuery(name = "Reserva.count", query = "SELECT COUNT (r) FROM Reserva r"),
     @NamedQuery(name = "Reserva.findAll", query = "SELECT r FROM Reserva r"),
     @NamedQuery(name = "Reserva.findByIdReserva", query = "SELECT r FROM Reserva r WHERE r.idReserva = :idReserva"),
     @NamedQuery(name = "Reserva.findByDesde", query = "SELECT r FROM Reserva r WHERE r.desde = :desde"),

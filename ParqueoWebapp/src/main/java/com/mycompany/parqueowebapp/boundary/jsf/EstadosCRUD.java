@@ -9,7 +9,7 @@ package com.mycompany.parqueowebapp.boundary.jsf;
  * @author daniloues
  */
 public enum EstadosCRUD {
-    ninguno,
-    nuevo,
-    modificar
+    NINGUNO,
+    NUEVO,
+    MODIFICAR
 }

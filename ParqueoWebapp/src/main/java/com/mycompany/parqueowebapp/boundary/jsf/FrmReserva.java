@@ -42,6 +42,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     HAY MUCHAS PARTES QUE NO HAN SIDO COMENTADAS ASI QUE PREGUNTENME SI ALGO SE VE RARO xd
     
      */
+    @Inject
+    FrmEspacio frmEspacio;
     // SE INYECTA EL BEAN DE RESERVA DONDE SE GUARDARAN Y MANEJARA EL CRUD DE LA TABLA 'RESERVA'
     @Inject
     ReservaBean rBean;
@@ -68,7 +70,6 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // SE DEBE LLEVAR LA SECUENCIA DE LAS RESERVAS, NO ESTOY SEGURO SI SERIA TRAER LA TABLA O EL DATO, SE DEJARA A DISCRECION
 //    @Inject
 //    Frm o Bean de TipoReservaSecuencia
-    
     // SE NECESITARA AGREGAR LOS POSIBLES TIPOS DE ESPACIOS
     @Inject
     TipoEspacioBean teBean;
@@ -88,14 +89,14 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     List<String> caractaristicasDisponibles;
     List<Integer> caracteristicasSeleccionadas;
     List<String> caracteristicasDisponiblesAsItems;
-    
+
 
     /*
     ESTE METODO DEBE ENCARGARSE DE SETTEAR caracteristicasSeleccionadas CUANDO UNA CHECKBOX SEA
     SELECCIONADA Y QUIZA caractaristicasDisponibles ES DE ANALIZAR EL CODIGO
      */
     public void refinarBusquedaNodo() {
-        
+
     }
 
     /*
@@ -118,9 +119,17 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     EL NOMBRE DEL ESPACIO Y EL PATH DEL AREA HASTA DICHO ESPACIO. TENTATIVAMENTE REGRESA UN STRING
      */
     public String generarPathArea(int idEspacio) {
+//        //frmEspacio.setRegistro(frmEspacio.eBean.findById(idEspacio));
+//        
+//        pathEspacio = "Espacio: " + frmEspacio.registro.getNombre() + ", Area: " + frmArea.getPathByArea(frmEspacio.registro.getIdArea());
+//        return pathEspacio;
 
-        return pathEspacio;
+          return pathEspacio;  
+    }
+    @Override
+    public List<Reserva> cargarDatos(int primero, int tamanio) {
 
+            return this.rBean.findRange(primero, tamanio);
     }
 
     /*
@@ -165,8 +174,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     @Override
     public String getIdPorObjeto(Reserva object) {
-        if (object != null && object.getIdTipoReserva() != null) {
-            return object.getIdTipoReserva().toString();
+        if (object != null && object.getIdReserva() != null) {
+            return object.getIdReserva().toString();
         }
         return null;
 
@@ -175,7 +184,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     @Override
     public Reserva getObjetoPorId(String id) {
         if (id != null && this.modelo != null && this.modelo.getWrappedData() != null) {
-            return this.modelo.getWrappedData().stream().filter(r -> r.getIdTipoReserva().toString().equals(id)).collect(Collectors.toList()).get(0);
+            return this.modelo.getWrappedData().stream().filter(r -> r.getIdReserva().toString().equals(id)).collect(Collectors.toList()).get(0);
         }
         return null;
     }
@@ -223,7 +232,6 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         this.frmRH = frmRH;
     }
 
-
     public TipoEspacioBean getTeBean() {
         return teBean;
     }
@@ -260,7 +268,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         this.nodoSeleccionado = nodoSeleccionado;
     }
 
-        public List<Espacio> getEspaciosDisponibles() {
+    public List<Espacio> getEspaciosDisponibles() {
         return espaciosDisponibles;
     }
 
@@ -291,6 +299,5 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public void setCaracteristicasDisponiblesAsItems(List<String> caracteristicasDisponiblesAsItems) {
         this.caracteristicasDisponiblesAsItems = caracteristicasDisponiblesAsItems;
     }
-    
-   
+
 }

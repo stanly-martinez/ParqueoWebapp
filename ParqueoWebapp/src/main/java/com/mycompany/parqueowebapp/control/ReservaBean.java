@@ -38,4 +38,9 @@ public class ReservaBean extends AbstractDataAccess<Reserva> implements Serializ
         super(Reserva.class);
     }
 
+    @Override
+    public String entityQuery() {
+        return ("Reserva");
+    }
+
 }

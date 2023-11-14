@@ -25,7 +25,7 @@ public abstract class frmAbstract<T> implements Serializable {
 
     LazyDataModel<T> modelo;
 
-    EstadosCRUD estado = EstadosCRUD.ninguno;
+    EstadosCRUD estado = EstadosCRUD.NINGUNO;
 
     T registro = null;
 
@@ -111,17 +111,17 @@ public abstract class frmAbstract<T> implements Serializable {
     public abstract void instanciarRegistro();
 
     public void seleccionarRegistro() {
-        this.estado = EstadosCRUD.modificar;
+        this.estado = EstadosCRUD.MODIFICAR;
     }
 
     public void btnNuevoHandler(ActionEvent ae) {
         this.instanciarRegistro();
-        this.estado = EstadosCRUD.nuevo;
+        this.estado = EstadosCRUD.NUEVO;
     }
 
     public void btnCancelarHandler(ActionEvent ae) {
         this.registro = null;
-        this.estado = EstadosCRUD.ninguno;
+        this.estado = EstadosCRUD.NINGUNO;
     }
 
     public void btnModificarHandler(ActionEvent ae) {
@@ -134,7 +134,7 @@ public abstract class frmAbstract<T> implements Serializable {
 
         }
         if (modify != null) {
-            this.estado = EstadosCRUD.ninguno;
+            this.estado = EstadosCRUD.NINGUNO;
             this.registro = null;
         }
     }
@@ -143,7 +143,7 @@ public abstract class frmAbstract<T> implements Serializable {
         try {
             AbstractDataAccess<T> allBean = getDataAccess();
             allBean.delete(registro);
-            this.estado = EstadosCRUD.ninguno;
+            this.estado = EstadosCRUD.NINGUNO;
             this.registro = null;
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -157,7 +157,7 @@ public abstract class frmAbstract<T> implements Serializable {
         try {
             AbstractDataAccess<T> allBean = getDataAccess();
             allBean.create(registro);
-            this.estado = EstadosCRUD.ninguno;
+            this.estado = EstadosCRUD.NINGUNO;
             mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, "Registro guardado con exito", "Se creo el registro");
             getFacesContext().addMessage(null, mensaje);
             return;

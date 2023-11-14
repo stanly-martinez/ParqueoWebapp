@@ -19,11 +19,11 @@ import java.util.List;
  *
  * @author daniloues
  */
-
 @Stateless
 @Local
 public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
 
+    private Area a;
     @PersistenceContext(unitName = "ParqueoPU")
     EntityManager em;
 
@@ -36,7 +36,7 @@ public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
                     q.setFirstResult(primero);
                     q.setMaxResults(tamanio);
                     return q.getResultList();
-                } else{
+                } else {
                     Query q = em.createNamedQuery("Area.findRaices");
                     q.setFirstResult(primero);
                     q.setMaxResults(tamanio);
@@ -46,16 +46,34 @@ public class AreaBean extends AbstractDataAccess<Area> implements Serializable {
         }
         return Collections.EMPTY_LIST;
     }
-    
-    public List<String> findNombresPadres(){
-        if(em !=null){
+
+    public List<String> findNombresPadres() {
+        if (em != null) {
             Query q = em.createNamedQuery("Area.findNombresPadres");
             return q.getResultList();
-            
+
         }
         return Collections.EMPTY_LIST;
     }
-    
+
+    public String findPathingByParent(Area area) {
+        String path = "";
+        if (em != null) {
+            a = area;
+            do {
+                Query q = em.createNamedQuery("Area.findAreaHasParent");
+                q.setParameter("idArea", area);
+                if (q.getSingleResult() != null) {
+                    // EL PADRE NO ES LA RAIZ
+                    a = (Area) q.getSingleResult();
+                    path = path + "/" + a.getNombre();
+                }
+            } while (a != null);
+
+            return path;
+        }
+        return path;
+    }
 
     @Override
     public String entityQuery() {
