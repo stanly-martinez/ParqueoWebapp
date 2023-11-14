@@ -72,7 +72,7 @@ public class comparadorFechas {
     
     
     //Premisa DESDE --> HASTA
-    public static boolean ValidarRangoFechas (Date desde, Date hasta){
+    public boolean ValidarRangoFechas (Date desde, Date hasta){
         //Verficacion de fechas validas
         if(fechaValida(desde) && fechaValida(hasta)){
             //Convertir a hora local

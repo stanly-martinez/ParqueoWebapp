@@ -5,6 +5,7 @@
 package com.mycompany.parqueowebapp.control;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -199,6 +200,7 @@ public abstract class AbstractDataAccess<T> {
             }
             if (em != null) {
                 try {
+                   
                     return (T) em.find(tipoDato, id);
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, ex.getMessage(), ex);
