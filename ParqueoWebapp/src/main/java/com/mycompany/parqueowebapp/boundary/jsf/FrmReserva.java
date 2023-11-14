@@ -1,6 +1,8 @@
 package com.mycompany.parqueowebapp.boundary.jsf;
 
+import com.mycompany.parqueowebapp.app.entity.Espacio;
 import com.mycompany.parqueowebapp.app.entity.Reserva;
+import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import com.mycompany.parqueowebapp.control.EspacioBean;
 import com.mycompany.parqueowebapp.control.EspacioCaracteristicaBean;
@@ -13,13 +15,14 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.LazyDataModel;
-
+import org.primefaces.model.TreeNode;
 
 @Named
 @ViewScoped
 public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
-    
+
     /*
     
     ************************************************************************************
@@ -38,68 +41,114 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     
     HAY MUCHAS PARTES QUE NO HAN SIDO COMENTADAS ASI QUE PREGUNTENME SI ALGO SE VE RARO xd
     
-    */
-    
-    
+     */
     // SE INYECTA EL BEAN DE RESERVA DONDE SE GUARDARAN Y MANEJARA EL CRUD DE LA TABLA 'RESERVA'
-    
     @Inject
     ReservaBean rBean;
-    
+
     // SE INYECTA EL FACESCONTEXT A UTILIZAR
-    
     @Inject
     FacesContext fc;
 
     // SE INYECTA PARA OBTENER LAS AREAS (EN EL FORMATO DEL INGENIERO SERIA BUENA IDEA IR A TRAER EL ARBOL DIRECTAMENTE DEL FORMULARIO YA HECHO)
     @Inject
     FrmArea frmArea;
-    
+
     // SE INYECTA PARA OBTENER LOS ESPACIOS RELACIONADOS A CADA AREA (EN EL FORMATO DEL INGENIERO CREO QUE SERIA EL FORMULARIO EN LUGAR DEL BEAN)
-    
     @Inject
     EspacioBean eBean;
 
-    // SE NECESITARA AGREGAR LAS RESERVAS EXITOSAS AL HISTORIAL (COMENTADO PORQUE DICHO FRM NO EXISTE AUN)
-    //@Inject
-    //FrmReservaHistorial frmRH;
-    
+    //SE NECESITARA AGREGAR LAS RESERVAS EXITOSAS AL HISTORIAL
+    @Inject
+    FrmReservaHistorial frmRH;
     // SE NECESITARA INFORMAR SOBRE LOS TIPOS DE RESERVA
     @Inject
     FrmTipoReserva frmTR;
-    
-    
+
     // SE DEBE LLEVAR LA SECUENCIA DE LAS RESERVAS, NO ESTOY SEGURO SI SERIA TRAER LA TABLA O EL DATO, SE DEJARA A DISCRECION
 //    @Inject
 //    Frm o Bean de TipoReservaSecuencia
-    
     // SE NECESITARA AGREGAR LOS POSIBLES TIPOS DE ESPACIOS
     @Inject
     TipoEspacioBean teBean;
-    
+
     // SE NECESITARA IR A TRAER LAS CARACTERISTICAS DE LOS ESPACIOS
     @Inject
     EspacioCaracteristicaBean terBean;
 
-    //OBTENDREMOS EL AREA QUE ESTA SIENDO SELECCIONADA
+    // VARIABLES
     int idAreaSeleccionada;
+    List<Espacio> espaciosDisponibles;
+    List<TipoReserva> listaTipoR;
+    String pathEspacio;
+    TreeNode raiz;
+    TreeNode nodoSeleccionado;
+    // NO CORREGIR ERROR DE NOMBRE, ASI ESTA EN EL XHTML DEL INGENIERO XD
+    List<String> caractaristicasDisponibles;
+    List<Integer> caracteristicasSeleccionadas;
+    List<String> caracteristicasDisponiblesAsItems;
+    
 
-    List<String> espacios;
+    /*
+    ESTE METODO DEBE ENCARGARSE DE SETTEAR caracteristicasSeleccionadas CUANDO UNA CHECKBOX SEA
+    SELECCIONADA Y QUIZA caractaristicasDisponibles ES DE ANALIZAR EL CODIGO
+     */
+    public void refinarBusquedaNodo() {
+        
+    }
 
-    //
-    public void asignarArea() {
-        if (idAreaSeleccionada >= 2) {
-            try {
-                espacios = eBean.findNombresByIdArea(idAreaSeleccionada);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    /*
+    ESTE METODO SE ENCARGA DE SELECCIONAR EL NODO DEL ARBOL SEGUN EL ELEMENTO SELECCIONADO
+     */
+    public void seleccionarNodoListener(NodeSelectEvent nse) {
+        this.registro = (Reserva) nse.getTreeNode().getData();
+        this.seleccionarRegistro();
+        /*
+        ESTE ES ES UN COPIA PEGA DE FrmArea USAR DE BASE PARA GUIARSE COMO CREAR ESTE METODO, DEJO ABAJO COMENTADO
+        COMO ES EN FrmArea PARA HACERLO CON RESPECTO A RESERVAHISTORIAL Y TIPORESERVASECUENCIA
+         */
+//        if (this.registro != null && this.registro.getIdArea() != null && this.frmEspacio != null) {
+//            this.frmEspacio.setIdArea(this.registro.getIdArea());
+//        }
+    }
+
+    /* 
+    VER MIN 11.47 DE LA GRABACION DEL INGENIERO DEL PARCIAL, ESTE METODO PARECE QUE REGRESA UN STRING QUE CONCATENA 
+    EL NOMBRE DEL ESPACIO Y EL PATH DEL AREA HASTA DICHO ESPACIO. TENTATIVAMENTE REGRESA UN STRING
+     */
+    public String generarPathArea(int idEspacio) {
+
+        return pathEspacio;
 
     }
 
-    public List<String> getEspacios() {
-        return espacios;
+    /*
+    DEVUELVE UNA LISTA DE TIPO RESERVA, ES DE ANALIZAR SI SE DEVUELVEN TODAS O CUAL SERIA EL CONTEXTO
+     */
+    public List<TipoReserva> listaTipoReserva() {
+        return listaTipoR;
+    }
+
+    /*
+    ESTE METODO CAMBIA LA COLUMNA DESDE CUANDO ES LLAMADO, ESTE DATO ES DE TIPO 'DATE', EN EL PROYECTO
+    PARQUEOWEBAPP.CONTROL HAY UN ARCHIVO LLAMADO 'COMPARADORFECHAS' CON UN METODO QUE VALIDA QUE LAS FECHAS RECIBIDAS SEAN
+    POSIBLES BAJO LOS ESTANDARES DE JAVA.UTIL.DATE
+     */
+    public void cambiarFechaDesde() {
+        /*
+        CODIGO QUE ASIGNA LA FECHA DESDE
+         */
+    }
+
+    /*
+    ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
+    EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
+     */
+    public void validate() {
+        /*
+        CODIGO QUE LLAMA AL METODO QUE COMPARARA LAS FECHAS
+         */
+
     }
 
     @Override
@@ -157,4 +206,90 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         this.idAreaSeleccionada = idAreaSeleccionada;
     }
 
+    public ReservaBean getrBean() {
+        return rBean;
+    }
+
+    public EspacioBean geteBean() {
+        return eBean;
+    }
+
+    public FrmReservaHistorial getFrmRH() {
+        return frmRH;
+    }
+
+    public void setFrmRH(FrmReservaHistorial frmRH) {
+        this.frmRH = frmRH;
+    }
+
+
+    public TipoEspacioBean getTeBean() {
+        return teBean;
+    }
+
+    public EspacioCaracteristicaBean getTerBean() {
+        return terBean;
+    }
+
+    public int getIdAreaSeleccionada() {
+        return idAreaSeleccionada;
+    }
+
+    public List<TipoReserva> getListaTipoR() {
+        return listaTipoR;
+    }
+
+    public String getPathEspacio() {
+        return pathEspacio;
+    }
+
+    public TreeNode getRaiz() {
+        return raiz;
+    }
+
+    public void setRaiz(TreeNode raiz) {
+        this.raiz = raiz;
+    }
+
+    public TreeNode getNodoSeleccionado() {
+        return nodoSeleccionado;
+    }
+
+    public void setNodoSeleccionado(TreeNode nodoSeleccionado) {
+        this.nodoSeleccionado = nodoSeleccionado;
+    }
+
+        public List<Espacio> getEspaciosDisponibles() {
+        return espaciosDisponibles;
+    }
+
+    public void setEspaciosDisponibles(List<Espacio> espaciosDisponibles) {
+        this.espaciosDisponibles = espaciosDisponibles;
+    }
+
+    public List<String> getCaractaristicasDisponibles() {
+        return caractaristicasDisponibles;
+    }
+
+    public void setCaractaristicasDisponibles(List<String> caractaristicasDisponibles) {
+        this.caractaristicasDisponibles = caractaristicasDisponibles;
+    }
+
+    public List<Integer> getCaracteristicasSeleccionadas() {
+        return caracteristicasSeleccionadas;
+    }
+
+    public void setCaracteristicasSeleccionadas(List<Integer> caracteristicasSeleccionadas) {
+        this.caracteristicasSeleccionadas = caracteristicasSeleccionadas;
+    }
+
+    public List<String> getCaracteristicasDisponiblesAsItems() {
+        return caracteristicasDisponiblesAsItems;
+    }
+
+    public void setCaracteristicasDisponiblesAsItems(List<String> caracteristicasDisponiblesAsItems) {
+        this.caracteristicasDisponiblesAsItems = caracteristicasDisponiblesAsItems;
+    }
+    
+   
 }
