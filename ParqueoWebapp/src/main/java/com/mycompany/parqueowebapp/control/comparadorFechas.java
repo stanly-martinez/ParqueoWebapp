@@ -67,4 +67,20 @@ public class comparadorFechas {
             }
             return false;
         }
+    
+    
+    //Premisa DESDE --> HASTA
+    public static boolean ValidarRangoFechas (Date desde, Date hasta){
+        //Verficacion de fechas validas
+        if(fechaValida(desde) && fechaValida(hasta)){
+            //Convertir a hora local
+            LocalDateTime fechaDesde = desde.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime fechaHasta = hasta.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            
+            //Verificar DESDE --> HASTA
+            return !fechaHasta.isBefore(fechaDesde);
+        } else {
+            return false;
+        }
+    }
 }
