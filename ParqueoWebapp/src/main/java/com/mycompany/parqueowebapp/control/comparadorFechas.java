@@ -8,11 +8,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-/**
- *
- * @author daniloues
- */
-public class comparadorFechas {
+
+public class comparadorFechas{
     public static boolean fechaValida(Date date) {
             // Convertir a la zona local
             ZoneId zoneId = ZoneId.systemDefault();
@@ -70,7 +67,7 @@ public class comparadorFechas {
     
     
     //Premisa DESDE --> HASTA
-    public static boolean ValidarRangoFechas (Date desde, Date hasta){
+    public boolean ValidarRangoFechas (Date desde, Date hasta){
         //Verficacion de fechas validas
         if(fechaValida(desde) && fechaValida(hasta)){
             //Convertir a hora local
