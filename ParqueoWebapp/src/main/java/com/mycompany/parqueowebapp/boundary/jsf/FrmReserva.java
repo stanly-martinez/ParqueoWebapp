@@ -68,6 +68,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // SE DEBE LLEVAR LA SECUENCIA DE LAS RESERVAS, NO ESTOY SEGURO SI SERIA TRAER LA TABLA O EL DATO, SE DEJARA A DISCRECION
 //    @Inject
 //    Frm o Bean de TipoReservaSecuencia
+    
     // SE NECESITARA AGREGAR LOS POSIBLES TIPOS DE ESPACIOS
     @Inject
     TipoEspacioBean teBean;
@@ -214,11 +215,11 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         return eBean;
     }
 
-    public FrmReservaHistorial getFrmRH() {
+    public FrmReservaHistorial getFrmReservaHistorial() {
         return frmRH;
     }
 
-    public void setFrmRH(FrmReservaHistorial frmRH) {
+    public void setFrmReservaHistorial(FrmReservaHistorial frmRH) {
         this.frmRH = frmRH;
     }
 

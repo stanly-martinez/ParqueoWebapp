@@ -27,10 +27,7 @@ public class FrmReservaHistorial extends frmAbstract<ReservaHistorial> implement
     EN ESTE FRM SE DEBE REGRESAR EL REGISTRO ACTUAL QUE SE CREA CUANDO SE INICIALIZA, USAR NUEVAMENTE DE EJEMPLO EL FrmArea,
     MODIFICAR ACORDE
     */
-    
-    
-    
-    
+
     @Inject
     ReservaHistorialBean rhBean;
 
