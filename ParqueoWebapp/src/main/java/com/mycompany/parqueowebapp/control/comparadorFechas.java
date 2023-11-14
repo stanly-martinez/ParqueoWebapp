@@ -4,6 +4,7 @@
  */
 package com.mycompany.parqueowebapp.control;
 
+import jakarta.inject.Named;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
  *
  * @author daniloues
  */
+@Named
 public class comparadorFechas {
     public static boolean fechaValida(Date date) {
             // Convertir a la zona local

@@ -11,6 +11,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import com.mycompany.parqueowebapp.control.TipoEspacioBean;
+import com.mycompany.parqueowebapp.control.TipoReservaBean;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -42,6 +43,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     HAY MUCHAS PARTES QUE NO HAN SIDO COMENTADAS ASI QUE PREGUNTENME SI ALGO SE VE RARO xd
     
      */
+    @Inject
+    TipoReservaBean trBean;
     @Inject
     FrmEspacio frmEspacio;
     // SE INYECTA EL BEAN DE RESERVA DONDE SE GUARDARAN Y MANEJARA EL CRUD DE LA TABLA 'RESERVA'
@@ -81,7 +84,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // VARIABLES
     int idAreaSeleccionada;
     List<Espacio> espaciosDisponibles;
-    List<TipoReserva> listaTipoR;
+    List<TipoReserva> listaTipoReserva;
     String pathEspacio;
     TreeNode raiz;
     TreeNode nodoSeleccionado;
@@ -126,18 +129,17 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
           return pathEspacio;  
     }
+    
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-
+            listaTipoReserva=trBean.findAll();
             return this.rBean.findRange(primero, tamanio);
     }
 
     /*
     DEVUELVE UNA LISTA DE TIPO RESERVA, ES DE ANALIZAR SI SE DEVUELVEN TODAS O CUAL SERIA EL CONTEXTO
      */
-    public List<TipoReserva> listaTipoReserva() {
-        return listaTipoR;
-    }
+    
 
     /*
     ESTE METODO CAMBIA LA COLUMNA DESDE CUANDO ES LLAMADO, ESTE DATO ES DE TIPO 'DATE', EN EL PROYECTO
@@ -244,8 +246,9 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         return idAreaSeleccionada;
     }
 
-    public List<TipoReserva> getListaTipoR() {
-        return listaTipoR;
+    public List<TipoReserva> getListaTipoReserva() {
+       
+        return listaTipoReserva;
     }
 
     public String getPathEspacio() {
