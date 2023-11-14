@@ -6,6 +6,7 @@ import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import com.mycompany.parqueowebapp.control.EspacioBean;
 import com.mycompany.parqueowebapp.control.EspacioCaracteristicaBean;
+import com.mycompany.parqueowebapp.control.comparadorFechas;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -77,6 +78,9 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // SE NECESITARA IR A TRAER LAS CARACTERISTICAS DE LOS ESPACIOS
     @Inject
     EspacioCaracteristicaBean terBean;
+    
+    @Inject
+    comparadorFechas valFechas;
 
     // VARIABLES
     int idAreaSeleccionada;
@@ -154,11 +158,9 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
     EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
      */
+    
     public void validate() {
-        /*
-        CODIGO QUE LLAMA AL METODO QUE COMPARARA LAS FECHAS
-         */
-
+       valFechas.ValidarRangoFechas(registro.getDesde(), registro.getHasta());
     }
 
     @Override
