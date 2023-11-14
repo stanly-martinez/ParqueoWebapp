@@ -3,6 +3,7 @@ package com.mycompany.parqueowebapp.boundary.jsf;
 import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import jakarta.faces.view.ViewScoped;
+import jakarta.faces.model.ListDataModel;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.AreaBean;
