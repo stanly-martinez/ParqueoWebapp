@@ -24,6 +24,8 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class FrmArea extends frmAbstract<Area> implements Serializable {
 
+    String pathArea;
+
     @Inject
     FrmEspacio frmEspacio;
 
@@ -32,30 +34,30 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
 
     @Inject
     FacesContext fc;
-    
+
     TreeNode raiz;
     TreeNode nodoSeleccionado;
     List<String> nombresPadres;
+
     @PostConstruct
-    
+
     @Override
     public void inicializar() {
         super.inicializar();
         this.raiz = new DefaultTreeNode("Areas", null);
         List<Area> lista = aBean.findByIdPadre(null, 0, 1000000);
-        
+
         if (lista != null && !lista.isEmpty()) {
             for (Area next : lista) {
                 if (next.getIdAreaPadre() == null) {
                     this.generarArbol(raiz, next);
                 }
             }
-            
+
         }
-        
-        
+
         nombresPadres = aBean.findNombresPadres();
-    
+
     }
 
     public List<String> getNombresPadres() {
@@ -119,6 +121,12 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
         this.nodoSeleccionado = nodoSeleccionado;
     }
 
+    public String getPathByArea(Area area) {
+
+        pathArea = aBean.findPathingByParent(area);
+        return pathArea;
+    }
+
     public void seleccionarNodoListener(NodeSelectEvent nse) {
         this.registro = (Area) nse.getTreeNode().getData();
         this.seleccionarRegistro();
@@ -126,21 +134,14 @@ public class FrmArea extends frmAbstract<Area> implements Serializable {
             this.frmEspacio.setIdArea(this.registro.getIdArea());
         }
     }
-    
 
-    
-    
     @Override
-    public Area getRegistro(){
+    public Area getRegistro() {
         return super.registro;
     }
-    
+
     public FrmEspacio getFrmEspacio() {
         return frmEspacio;
     }
 
-        
-    
-    
-    
 }
