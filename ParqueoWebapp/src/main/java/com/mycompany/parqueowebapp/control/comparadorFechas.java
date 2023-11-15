@@ -19,12 +19,6 @@ public class comparadorFechas{
             ZoneId zoneId = ZoneId.systemDefault();
             LocalDateTime localDateTime = date.toInstant().atZone(zoneId).toLocalDateTime();
 
-
-    public static boolean fechaValida(Date date) {
-        // Convertir a la zona local
-        ZoneId zoneId = ZoneId.systemDefault();
-        LocalDateTime localDateTime = date.toInstant().atZone(zoneId).toLocalDateTime();
-
         int anio = localDateTime.getYear();
         int mes = localDateTime.getMonthValue();
         int dia = localDateTime.getDayOfMonth();
