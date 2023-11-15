@@ -14,15 +14,19 @@ import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import com.mycompany.parqueowebapp.control.TipoEspacioBean;
 import com.mycompany.parqueowebapp.control.TipoReservaBean;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIOutput;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.TreeNode;
 
@@ -90,6 +94,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     EspacioCaracteristicaBean terBean;
 
     // VARIABLES
+    Area areaE;
     int idAreaSeleccionada;
     Date TemporalDate;
     List<Espacio> espaciosDisponibles;
@@ -115,15 +120,11 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ENCARGA DE SELECCIONAR EL NODO DEL ARBOL SEGUN EL ELEMENTO SELECCIONADO
      */
     public void seleccionarNodoListener(NodeSelectEvent nse) {
-        this.registro = (Reserva) nse.getTreeNode().getData();
+        frmArea.setRegistro((Area) nse.getTreeNode().getData());
         this.seleccionarRegistro();
-        /*
-        ESTE ES ES UN COPIA PEGA DE FrmArea USAR DE BASE PARA GUIARSE COMO CREAR ESTE METODO, DEJO ABAJO COMENTADO
-        COMO ES EN FrmArea PARA HACERLO CON RESPECTO A RESERVAHISTORIAL Y TIPORESERVASECUENCIA
-         */
-//        if (this.registro != null && this.registro.getIdArea() != null && this.frmEspacio != null) {
-//            this.frmEspacio.setIdArea(this.registro.getIdArea());
-//        }
+        if (this.areaE != null && this.areaE.getIdArea() != null && this.frmEspacio != null) {
+            this.frmEspacio.setIdArea(areaE.getIdArea());
+        }
     }
 
     /* 
@@ -160,10 +161,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     PARQUEOWEBAPP.CONTROL HAY UN ARCHIVO LLAMADO 'COMPARADORFECHAS' CON UN METODO QUE VALIDA QUE LAS FECHAS RECIBIDAS SEAN
     POSIBLES BAJO LOS ESTANDARES DE JAVA.UTIL.DATE
      */
-    public void cambiarFechaDesde() {
-        /*
-        CODIGO QUE ASIGNA LA FECHA DESDE
-         */
+    public void cambiarFechaDesde(AjaxBehaviorEvent event) {
+        this.registro.setDesde((Date) ((UIOutput) event.getSource()).getValue());
     }
 
     /*
@@ -181,11 +180,11 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public void validate(FacesContext context, UIComponent component, Object value) {
         Date fechaHasta = (Date) value;
         Date fechaDesde = registro.getDesde();
-        
+
         if (fechaHasta != null && fechaDesde != null && fechaHasta.before(fechaDesde)) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "La fecha no validas La fecha No pued ser menor que la inicial", null);
-            
+
             registro.setHasta(null);
             throw new ValidatorException(message);
         }
@@ -229,8 +228,33 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public LazyDataModel<Reserva> getModelo() {
         return super.getModelo();
     }
-    
 
+    @PostConstruct
+    @Override
+    public void inicializar() {
+        super.inicializar();
+        this.raiz = new DefaultTreeNode("Areas", null);
+        List<Area> lista = aBean.findByIdPadre(null, 0, 10000000);
+        if (lista != null && !lista.isEmpty()) {
+
+            for (Area next : lista) {
+                if (next.getIdAreaPadre() == null) {
+                    this.generarArbol(raiz, next);
+                }
+            }
+
+        }
+    }
+
+    public void generarArbol(TreeNode padre, Area actual) {
+        DefaultTreeNode nuevoPadre = new DefaultTreeNode(actual, padre);
+
+        List<Area> hijos = this.eBean.findByIdPadre(actual.getIdArea(), 0, 100000000);
+        for (Area hijo : hijos) {
+            generarArbol(nuevoPadre, hijo);
+        }
+
+    }
 
     public FrmArea getFrmArea() {
         return frmArea;
@@ -255,8 +279,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public EspacioBean geteBean() {
         return eBean;
     }
-    
-    
+
     public FrmReservaHistorial getFrmReservaHistorial() {
         return frmRH;
     }
