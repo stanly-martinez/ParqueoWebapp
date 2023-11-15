@@ -147,7 +147,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-//            listaTipoReserva=trBean.findAll();
+        listaTipoReserva=trBean.findAll();
         return this.rBean.findRange(primero, tamanio);
     }
 
@@ -177,22 +177,21 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         }
     }
 
-    public boolean validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        Date fechaSeleccionada = (Date) value;
-        Date fechaActual = new Date();
-        Date fechaDesde = this.registro.getDesde();
+    public boolean validate(FacesContext context, UIComponent component, Object value) {
+        // Obtén el valor del p:calendar
+        Date fechaHasta = (Date) value;
 
-        if (fechaDesde.before(fechaActual)) {
-            ocultarPanelEspacio();
-            throw new ValidatorException(new FacesMessage("La fecha 'desde' debe ser posterior a la fecha actual"));
+        // Accede a la fecha desde el bean
+        Date fechaDesde = registro.getDesde();
+
+        // Realiza la validación
+        if (fechaHasta != null && fechaDesde != null && fechaHasta.before(fechaDesde)) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "La fecha no validas La fecha No pued ser menor que la inicial", null);
             
+            throw new ValidatorException(message); 
         }
-
-        if (fechaSeleccionada != null && fechaSeleccionada.after(fechaActual) && fechaSeleccionada.after(fechaDesde)) {
-            return true; // La fecha seleccionada es posterior a la actual y a 'desde'
-        }
-
-        throw new ValidatorException(new FacesMessage("La fecha 'hasta' debe ser posterior a la fecha actual y a 'desde'"));
+        return true;
     }
 
     @Override
