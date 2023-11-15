@@ -169,13 +169,23 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
     EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
      */
+    private void ocultarPanelEspacio() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIComponent panelEspacio = context.getViewRoot().findComponent("form:pnlEspacio"); // Reemplaza "form" con el ID de tu formulario
+        if (panelEspacio != null) {
+            panelEspacio.setRendered(false);
+        }
+    }
+
     public boolean validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         Date fechaSeleccionada = (Date) value;
         Date fechaActual = new Date();
         Date fechaDesde = this.registro.getDesde();
 
         if (fechaDesde.before(fechaActual)) {
+            ocultarPanelEspacio();
             throw new ValidatorException(new FacesMessage("La fecha 'desde' debe ser posterior a la fecha actual"));
+            
         }
 
         if (fechaSeleccionada != null && fechaSeleccionada.after(fechaActual) && fechaSeleccionada.after(fechaDesde)) {
