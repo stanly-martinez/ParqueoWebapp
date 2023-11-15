@@ -95,6 +95,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     // VARIABLES
     int idAreaSeleccionada;
+    Date TemporalDate;
     List<Espacio> espaciosDisponibles;
     List<TipoReserva> listaTipoReserva;
     String pathEspacio;
@@ -151,7 +152,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-//            listaTipoReserva=trBean.findAll();
+        listaTipoReserva = trBean.findAll();
         return this.rBean.findRange(primero, tamanio);
     }
 
@@ -173,22 +174,26 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
     EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
      */
-    public boolean validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        Date fechaSeleccionada = (Date) value;
-        Date fechaActual = new Date();
-        Date fechaDesde = this.registro.getDesde();
-
-        if (fechaDesde.before(fechaActual)) {
-            throw new ValidatorException(new FacesMessage("La fecha 'desde' debe ser posterior a la fecha actual"));
+    private void ocultarPanelEspacio() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        UIComponent panelEspacio = context.getViewRoot().findComponent("form:pnlEspacio"); // Reemplaza "form" con el ID de tu formulario
+        if (panelEspacio != null) {
+            panelEspacio.setRendered(false);
         }
+    }
 
-        if (fechaSeleccionada != null && fechaSeleccionada.after(fechaActual) && fechaSeleccionada.after(fechaDesde)) {
-            return true; // La fecha seleccionada es posterior a la actual y a 'desde'
+    public void validate(FacesContext context, UIComponent component, Object value) {
+        Date fechaHasta = (Date) value;
+        Date fechaDesde = registro.getDesde();
+        
+        if (fechaHasta != null && fechaDesde != null && fechaHasta.before(fechaDesde)) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "La fecha no validas La fecha No pued ser menor que la inicial", null);
+            
+            registro.setHasta(null);
+            throw new ValidatorException(message);
         }
-
-        throw new ValidatorException(new FacesMessage("La fecha 'hasta' debe ser posterior a la fecha actual y a 'desde'"));
-
-    
+    }
 
     @Override
     public AbstractDataAccess<Reserva> getDataAccess() {
@@ -228,6 +233,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public LazyDataModel<Reserva> getModelo() {
         return super.getModelo();
     }
+    
+
 
     public FrmArea getFrmArea() {
         return frmArea;
@@ -252,7 +259,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public EspacioBean geteBean() {
         return eBean;
     }
-
+    
+    
     public FrmReservaHistorial getFrmReservaHistorial() {
         return frmRH;
     }
