@@ -14,8 +14,12 @@ import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import com.mycompany.parqueowebapp.control.TipoEspacioBean;
 import com.mycompany.parqueowebapp.control.TipoReservaBean;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.primefaces.event.NodeSelectEvent;
@@ -140,18 +144,17 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         }
         return "";
     }
+
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
 //            listaTipoReserva=trBean.findAll();
-            return this.rBean.findRange(primero, tamanio);
+        return this.rBean.findRange(primero, tamanio);
     }
 
     /*
     DEVUELVE UNA LISTA DE TIPO RESERVA, ES DE ANALIZAR SI SE DEVUELVEN TODAS O CUAL SERIA EL CONTEXTO
      */
-
-
-    /*
+ /*
     ESTE METODO CAMBIA LA COLUMNA DESDE CUANDO ES LLAMADO, ESTE DATO ES DE TIPO 'DATE', EN EL PROYECTO
     PARQUEOWEBAPP.CONTROL HAY UN ARCHIVO LLAMADO 'COMPARADORFECHAS' CON UN METODO QUE VALIDA QUE LAS FECHAS RECIBIDAS SEAN
     POSIBLES BAJO LOS ESTANDARES DE JAVA.UTIL.DATE
@@ -166,11 +169,20 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
     EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
      */
-    public void validate() {
-        /*
-        CODIGO QUE LLAMA AL METODO QUE COMPARARA LAS FECHAS
-         */
+    public boolean validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        Date fechaSeleccionada = (Date) value;
+        Date fechaActual = new Date();
+        Date fechaDesde = this.registro.getDesde();
 
+        if (fechaDesde.before(fechaActual)) {
+            throw new ValidatorException(new FacesMessage("La fecha 'desde' debe ser posterior a la fecha actual"));
+        }
+
+        if (fechaSeleccionada != null && fechaSeleccionada.after(fechaActual) && fechaSeleccionada.after(fechaDesde)) {
+            return true; // La fecha seleccionada es posterior a la actual y a 'desde'
+        }
+
+        throw new ValidatorException(new FacesMessage("La fecha 'hasta' debe ser posterior a la fecha actual y a 'desde'"));
     }
 
     @Override
@@ -211,32 +223,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public LazyDataModel<Reserva> getModelo() {
         return super.getModelo();
     }
-    
-//    public String generarPathArea(Long id) {
-//
-//        String txtSalida = "Espacio: ";
-//
-//        Espacio espacioTabla = eBean.findById(id);
-//        txtSalida = txtSalida + espacioTabla.getNombre();
-//
-//        Area espacioArea = aBean.findById(espacioTabla.getIdArea().getIdArea());
-//        txtSalida = txtSalida + ", Area: ";
-//        txtSalida = txtSalida + espacioArea.getNombre();
-//
-//        boolean signal = true;
-//        do {
-//            if (espacioArea.getIdAreaPadre() != null) {
-//                espacioArea = aBean.findById(espacioArea.getIdAreaPadre().getIdArea());
-//                txtSalida = txtSalida + "/";
-//                txtSalida = txtSalida + espacioArea.getNombre();
-//            } else {
-//                signal = false;
-//            }
-//
-//        } while (signal);
-//
-//        return txtSalida;
-//    }
+
     public FrmArea getFrmArea() {
         return frmArea;
     }
@@ -288,7 +275,6 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public void setListaTipoReserva(List<TipoReserva> listaTipoReserva) {
         this.listaTipoReserva = listaTipoReserva;
     }
-    
 
     public String getPathEspacio() {
         return pathEspacio;
