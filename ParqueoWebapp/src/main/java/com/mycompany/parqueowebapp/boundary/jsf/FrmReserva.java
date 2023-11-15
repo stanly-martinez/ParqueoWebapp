@@ -1,9 +1,11 @@
 package com.mycompany.parqueowebapp.boundary.jsf;
 
+import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.app.entity.Espacio;
 import com.mycompany.parqueowebapp.app.entity.Reserva;
 import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
+import com.mycompany.parqueowebapp.control.AreaBean;
 import com.mycompany.parqueowebapp.control.EspacioBean;
 import com.mycompany.parqueowebapp.control.EspacioCaracteristicaBean;
 import com.mycompany.parqueowebapp.control.comparadorFechas;
@@ -12,8 +14,13 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import com.mycompany.parqueowebapp.control.TipoEspacioBean;
+import com.mycompany.parqueowebapp.control.TipoReservaBean;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.primefaces.event.NodeSelectEvent;
@@ -43,6 +50,10 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     HAY MUCHAS PARTES QUE NO HAN SIDO COMENTADAS ASI QUE PREGUNTENME SI ALGO SE VE RARO xd
     
      */
+    @Inject
+    TipoReservaBean trBean;
+    @Inject
+    AreaBean aBean;
     @Inject
     FrmEspacio frmEspacio;
     // SE INYECTA EL BEAN DE RESERVA DONDE SE GUARDARAN Y MANEJARA EL CRUD DE LA TABLA 'RESERVA'
@@ -85,7 +96,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // VARIABLES
     int idAreaSeleccionada;
     List<Espacio> espaciosDisponibles;
-    List<TipoReserva> listaTipoR;
+    List<TipoReserva> listaTipoReserva;
     String pathEspacio;
     TreeNode raiz;
     TreeNode nodoSeleccionado;
@@ -122,28 +133,32 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     VER MIN 11.47 DE LA GRABACION DEL INGENIERO DEL PARCIAL, ESTE METODO PARECE QUE REGRESA UN STRING QUE CONCATENA 
     EL NOMBRE DEL ESPACIO Y EL PATH DEL AREA HASTA DICHO ESPACIO. TENTATIVAMENTE REGRESA UN STRING
      */
-    public String generarPathArea(int idEspacio) {
-//        //frmEspacio.setRegistro(frmEspacio.eBean.findById(idEspacio));
-//        
-//        pathEspacio = "Espacio: " + frmEspacio.registro.getNombre() + ", Area: " + frmArea.getPathByArea(frmEspacio.registro.getIdArea());
-//        return pathEspacio;
+    public String generarPathArea(long idEspacio) {
 
-          return pathEspacio;  
+        Espacio espacio = eBean.findById(idEspacio);
+
+        if (espacio != null) {
+            Area areaPadre = espacio.getIdArea().getIdAreaPadre();
+            Area area = espacio.getIdArea();
+            if (areaPadre != null) {
+                return "Espacio: " + espacio.getNombre() + " Areas:" + areaPadre.getNombre() + "/" + area.getNombre();
+            } else if (area != null) {
+                return "Espacio: " + espacio.getNombre() + " Areas: " + area.getNombre();
+            }
+        }
+        return "";
     }
+
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-
-            return this.rBean.findRange(primero, tamanio);
+//            listaTipoReserva=trBean.findAll();
+        return this.rBean.findRange(primero, tamanio);
     }
 
     /*
     DEVUELVE UNA LISTA DE TIPO RESERVA, ES DE ANALIZAR SI SE DEVUELVEN TODAS O CUAL SERIA EL CONTEXTO
      */
-    public List<TipoReserva> listaTipoReserva() {
-        return listaTipoR;
-    }
-
-    /*
+ /*
     ESTE METODO CAMBIA LA COLUMNA DESDE CUANDO ES LLAMADO, ESTE DATO ES DE TIPO 'DATE', EN EL PROYECTO
     PARQUEOWEBAPP.CONTROL HAY UN ARCHIVO LLAMADO 'COMPARADORFECHAS' CON UN METODO QUE VALIDA QUE LAS FECHAS RECIBIDAS SEAN
     POSIBLES BAJO LOS ESTANDARES DE JAVA.UTIL.DATE
@@ -158,10 +173,22 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ASEGURA QUE LA FECHA 'DESDE' NO SEA MAYOR A LA 'HASTA'. DE PREFERENCIA HACER LA COMPARACION EN UN METODO
     EN LA CLASE 'COMPARADORFECHAS' PARA QUE TODOS LO UTILICEMOS PARA COMPARAR FECHAS
      */
+    public boolean validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+        Date fechaSeleccionada = (Date) value;
+        Date fechaActual = new Date();
+        Date fechaDesde = this.registro.getDesde();
+
+        if (fechaDesde.before(fechaActual)) {
+            throw new ValidatorException(new FacesMessage("La fecha 'desde' debe ser posterior a la fecha actual"));
+        }
+
+        if (fechaSeleccionada != null && fechaSeleccionada.after(fechaActual) && fechaSeleccionada.after(fechaDesde)) {
+            return true; // La fecha seleccionada es posterior a la actual y a 'desde'
+        }
+
+        throw new ValidatorException(new FacesMessage("La fecha 'hasta' debe ser posterior a la fecha actual y a 'desde'"));
+
     
-    public void validate() {
-       valFechas.ValidarRangoFechas(registro.getDesde(), registro.getHasta());
-    }
 
     @Override
     public AbstractDataAccess<Reserva> getDataAccess() {
@@ -246,8 +273,12 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         return idAreaSeleccionada;
     }
 
-    public List<TipoReserva> getListaTipoR() {
-        return listaTipoR;
+    public List<TipoReserva> getListaTipoReserva() {
+        return listaTipoReserva;
+    }
+
+    public void setListaTipoReserva(List<TipoReserva> listaTipoReserva) {
+        this.listaTipoReserva = listaTipoReserva;
     }
 
     public String getPathEspacio() {

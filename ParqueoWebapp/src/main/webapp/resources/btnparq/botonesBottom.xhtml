@@ -26,17 +26,17 @@
         <p:commandButton value="Guardar" 
                          style="margin: 10px;"
                          actionListener="#{cc.attrs.bean.btnGuardarHandler}" 
-                         update="@form :frmtable"
+                         update="@form :frmTabla"
                          rendered="#{cc.attrs.bean.estado == 'NUEVO'}"/>
         <p:commandButton value="Modificar" 
                          style="margin: 10px;"
                          actionListener="#{cc.attrs.bean.btnModificarHandler}" 
-                         update="@form :pnlDetalle :frmtable"
+                         update="@form :pnlDetalle :frmTabla"
                          rendered="#{cc.attrs.bean.estado == 'MODIFICAR'}"/>
         <p:commandButton value="Eliminar" 
                          style="margin: 10px;"
                          actionListener="#{cc.attrs.bean.btnEliminarHandler}" 
-                         update="@form :pnlDetalle :frmtable"
+                         update="@form :pnlDetalle :frmTabla"
                          rendered="#{cc.attrs.bean.estado == 'MODIFICAR'}"/>
     </h:panelGrid>
 </cc:implementation>
