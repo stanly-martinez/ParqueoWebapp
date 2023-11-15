@@ -4,6 +4,7 @@
  */
 package com.mycompany.parqueowebapp.control;
 
+import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.app.entity.Espacio;
 import jakarta.ejb.Local;
 import jakarta.ejb.Stateless;
@@ -37,6 +38,18 @@ public class EspacioBean extends AbstractDataAccess<Espacio> implements Serializ
             if (em != null) {
                 Query q = em.createNamedQuery("Espacio.findByIdArea");
                 q.setParameter("idArea", idArea);
+                q.setFirstResult(primero);
+                q.setMaxResults(tamanio);
+                return q.getResultList();
+            }
+        }
+        return Collections.EMPTY_LIST;
+    }
+    public List<Area> findByIdPadre(final Integer idAreaPadre, int primero, int tamanio) {
+        if (idAreaPadre != null && primero >= 0 && tamanio > 0) {
+            if (em != null) {
+                Query q = em.createNamedQuery("Area.findByIdPadre");
+                q.setParameter("idAreaPadre", idAreaPadre);
                 q.setFirstResult(primero);
                 q.setMaxResults(tamanio);
                 return q.getResultList();
