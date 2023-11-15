@@ -3,6 +3,7 @@ package com.mycompany.parqueowebapp.boundary.jsf;
 import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.app.entity.Espacio;
 import com.mycompany.parqueowebapp.app.entity.Reserva;
+import com.mycompany.parqueowebapp.app.entity.TipoEspacio;
 import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import com.mycompany.parqueowebapp.control.AreaBean;
@@ -20,8 +21,10 @@ import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIOutput;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.event.AjaxBehaviorEvent;
+import jakarta.faces.model.SelectItem;
 import jakarta.faces.validator.ValidatorException;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,9 +106,9 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     TreeNode raiz;
     TreeNode nodoSeleccionado;
     // NO CORREGIR ERROR DE NOMBRE, ASI ESTA EN EL XHTML DEL INGENIERO XD
-    List<String> caractaristicasDisponibles;
+    List<TipoEspacio> caractaristicasDisponibles;
     List<Integer> caracteristicasSeleccionadas;
-    List<String> caracteristicasDisponiblesAsItems;
+    List<SelectItem> caracteristicasDisponiblesAsItems;
 
 
     /*
@@ -120,11 +123,24 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     ESTE METODO SE ENCARGA DE SELECCIONAR EL NODO DEL ARBOL SEGUN EL ELEMENTO SELECCIONADO
      */
     public void seleccionarNodoListener(NodeSelectEvent nse) {
-        frmArea.setRegistro((Area) nse.getTreeNode().getData());
+        Area area = (Area) nse.getTreeNode().getData();
         this.seleccionarRegistro();
+        System.out.println("selecionaste " + (Area) nse.getTreeNode().getData());
         if (this.areaE != null && this.areaE.getIdArea() != null && this.frmEspacio != null) {
             this.frmEspacio.setIdArea(areaE.getIdArea());
         }
+
+        espaciosDisponibles = eBean.findByIdArea(area.getIdArea(), 0, 10000);
+        caractaristicasDisponibles = teBean.findRange(0, 100000);
+
+        // Lista de objetos SelectItem que representan las opciones disponibles
+        List<SelectItem> items = new ArrayList<>();
+
+        for (TipoEspacio caracteristica : caractaristicasDisponibles) {
+            items.add(new SelectItem(caracteristica, caracteristica.getNombre()));
+        }
+
+        setCaracteristicasDisponiblesAsItems(items);
     }
 
     /* 
@@ -255,7 +271,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         }
 
     }
-
+    
     public FrmArea getFrmArea() {
         return frmArea;
     }
@@ -336,14 +352,6 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         this.espaciosDisponibles = espaciosDisponibles;
     }
 
-    public List<String> getCaractaristicasDisponibles() {
-        return caractaristicasDisponibles;
-    }
-
-    public void setCaractaristicasDisponibles(List<String> caractaristicasDisponibles) {
-        this.caractaristicasDisponibles = caractaristicasDisponibles;
-    }
-
     public List<Integer> getCaracteristicasSeleccionadas() {
         return caracteristicasSeleccionadas;
     }
@@ -352,12 +360,19 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         this.caracteristicasSeleccionadas = caracteristicasSeleccionadas;
     }
 
-    public List<String> getCaracteristicasDisponiblesAsItems() {
+    public List<TipoEspacio> getCaractaristicasDisponibles() {
+        return caractaristicasDisponibles;
+    }
+
+    public void setCaractaristicasDisponibles(List<TipoEspacio> caractaristicasDisponibles) {
+        this.caractaristicasDisponibles = caractaristicasDisponibles;
+    }
+
+    public List<SelectItem> getCaracteristicasDisponiblesAsItems() {
         return caracteristicasDisponiblesAsItems;
     }
 
-    public void setCaracteristicasDisponiblesAsItems(List<String> caracteristicasDisponiblesAsItems) {
+    public void setCaracteristicasDisponiblesAsItems(List<SelectItem> caracteristicasDisponiblesAsItems) {
         this.caracteristicasDisponiblesAsItems = caracteristicasDisponiblesAsItems;
     }
-
 }
