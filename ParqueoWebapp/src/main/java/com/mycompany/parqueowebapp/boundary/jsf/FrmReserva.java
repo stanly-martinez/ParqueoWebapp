@@ -1,9 +1,11 @@
 package com.mycompany.parqueowebapp.boundary.jsf;
 
+import com.mycompany.parqueowebapp.app.entity.Area;
 import com.mycompany.parqueowebapp.app.entity.Espacio;
 import com.mycompany.parqueowebapp.app.entity.Reserva;
 import com.mycompany.parqueowebapp.app.entity.TipoReserva;
 import com.mycompany.parqueowebapp.control.AbstractDataAccess;
+import com.mycompany.parqueowebapp.control.AreaBean;
 import com.mycompany.parqueowebapp.control.EspacioBean;
 import com.mycompany.parqueowebapp.control.EspacioCaracteristicaBean;
 import jakarta.faces.view.ViewScoped;
@@ -11,6 +13,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import com.mycompany.parqueowebapp.control.ReservaBean;
 import com.mycompany.parqueowebapp.control.TipoEspacioBean;
+import com.mycompany.parqueowebapp.control.TipoReservaBean;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -42,6 +45,10 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     HAY MUCHAS PARTES QUE NO HAN SIDO COMENTADAS ASI QUE PREGUNTENME SI ALGO SE VE RARO xd
     
      */
+    @Inject
+    TipoReservaBean trBean;
+    @Inject
+    AreaBean aBean;
     @Inject
     FrmEspacio frmEspacio;
     // SE INYECTA EL BEAN DE RESERVA DONDE SE GUARDARAN Y MANEJARA EL CRUD DE LA TABLA 'RESERVA'
@@ -81,7 +88,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // VARIABLES
     int idAreaSeleccionada;
     List<Espacio> espaciosDisponibles;
-    List<TipoReserva> listaTipoR;
+    List<TipoReserva> listaTipoReserva;
     String pathEspacio;
     TreeNode raiz;
     TreeNode nodoSeleccionado;
@@ -118,26 +125,31 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     VER MIN 11.47 DE LA GRABACION DEL INGENIERO DEL PARCIAL, ESTE METODO PARECE QUE REGRESA UN STRING QUE CONCATENA 
     EL NOMBRE DEL ESPACIO Y EL PATH DEL AREA HASTA DICHO ESPACIO. TENTATIVAMENTE REGRESA UN STRING
      */
-    public String generarPathArea(int idEspacio) {
-//        //frmEspacio.setRegistro(frmEspacio.eBean.findById(idEspacio));
-//        
-//        pathEspacio = "Espacio: " + frmEspacio.registro.getNombre() + ", Area: " + frmArea.getPathByArea(frmEspacio.registro.getIdArea());
-//        return pathEspacio;
+    public String generarPathArea(long idEspacio) {
 
-          return pathEspacio;  
+        Espacio espacio = eBean.findById(idEspacio);
+
+        if (espacio != null) {
+            Area areaPadre = espacio.getIdArea().getIdAreaPadre();
+            Area area = espacio.getIdArea();
+            if (areaPadre != null) {
+                return "Espacio: " + espacio.getNombre() + " Areas:" + areaPadre.getNombre() + "/" + area.getNombre();
+            } else if (area != null) {
+                return "Espacio: " + espacio.getNombre() + " Areas: " + area.getNombre();
+            }
+        }
+        return "";
     }
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-
+//            listaTipoReserva=trBean.findAll();
             return this.rBean.findRange(primero, tamanio);
     }
 
     /*
     DEVUELVE UNA LISTA DE TIPO RESERVA, ES DE ANALIZAR SI SE DEVUELVEN TODAS O CUAL SERIA EL CONTEXTO
      */
-    public List<TipoReserva> listaTipoReserva() {
-        return listaTipoR;
-    }
+
 
     /*
     ESTE METODO CAMBIA LA COLUMNA DESDE CUANDO ES LLAMADO, ESTE DATO ES DE TIPO 'DATE', EN EL PROYECTO
@@ -199,7 +211,32 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public LazyDataModel<Reserva> getModelo() {
         return super.getModelo();
     }
-
+    
+//    public String generarPathArea(Long id) {
+//
+//        String txtSalida = "Espacio: ";
+//
+//        Espacio espacioTabla = eBean.findById(id);
+//        txtSalida = txtSalida + espacioTabla.getNombre();
+//
+//        Area espacioArea = aBean.findById(espacioTabla.getIdArea().getIdArea());
+//        txtSalida = txtSalida + ", Area: ";
+//        txtSalida = txtSalida + espacioArea.getNombre();
+//
+//        boolean signal = true;
+//        do {
+//            if (espacioArea.getIdAreaPadre() != null) {
+//                espacioArea = aBean.findById(espacioArea.getIdAreaPadre().getIdArea());
+//                txtSalida = txtSalida + "/";
+//                txtSalida = txtSalida + espacioArea.getNombre();
+//            } else {
+//                signal = false;
+//            }
+//
+//        } while (signal);
+//
+//        return txtSalida;
+//    }
     public FrmArea getFrmArea() {
         return frmArea;
     }
@@ -244,9 +281,14 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         return idAreaSeleccionada;
     }
 
-    public List<TipoReserva> getListaTipoR() {
-        return listaTipoR;
+    public List<TipoReserva> getListaTipoReserva() {
+        return listaTipoReserva;
     }
+
+    public void setListaTipoReserva(List<TipoReserva> listaTipoReserva) {
+        this.listaTipoReserva = listaTipoReserva;
+    }
+    
 
     public String getPathEspacio() {
         return pathEspacio;
