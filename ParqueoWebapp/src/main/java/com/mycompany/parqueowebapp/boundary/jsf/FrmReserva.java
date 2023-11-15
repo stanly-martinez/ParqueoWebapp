@@ -91,6 +91,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     // VARIABLES
     int idAreaSeleccionada;
+    Date TemporalDate;
     List<Espacio> espaciosDisponibles;
     List<TipoReserva> listaTipoReserva;
     String pathEspacio;
@@ -147,7 +148,7 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
 
     @Override
     public List<Reserva> cargarDatos(int primero, int tamanio) {
-        listaTipoReserva=trBean.findAll();
+        listaTipoReserva = trBean.findAll();
         return this.rBean.findRange(primero, tamanio);
     }
 
@@ -177,21 +178,17 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
         }
     }
 
-    public boolean validate(FacesContext context, UIComponent component, Object value) {
-        // Obtén el valor del p:calendar
+    public void validate(FacesContext context, UIComponent component, Object value) {
         Date fechaHasta = (Date) value;
-
-        // Accede a la fecha desde el bean
         Date fechaDesde = registro.getDesde();
-
-        // Realiza la validación
+        
         if (fechaHasta != null && fechaDesde != null && fechaHasta.before(fechaDesde)) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "La fecha no validas La fecha No pued ser menor que la inicial", null);
             
-            throw new ValidatorException(message); 
+            registro.setHasta(null);
+            throw new ValidatorException(message);
         }
-        return true;
     }
 
     @Override
@@ -232,6 +229,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public LazyDataModel<Reserva> getModelo() {
         return super.getModelo();
     }
+    
+
 
     public FrmArea getFrmArea() {
         return frmArea;
@@ -256,7 +255,8 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     public EspacioBean geteBean() {
         return eBean;
     }
-
+    
+    
     public FrmReservaHistorial getFrmReservaHistorial() {
         return frmRH;
     }
