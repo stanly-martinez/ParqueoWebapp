@@ -8,6 +8,7 @@ import com.mycompany.parqueowebapp.control.AbstractDataAccess;
 import com.mycompany.parqueowebapp.control.AreaBean;
 import com.mycompany.parqueowebapp.control.EspacioBean;
 import com.mycompany.parqueowebapp.control.EspacioCaracteristicaBean;
+import com.mycompany.parqueowebapp.control.comparadorFechas;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import java.io.Serializable;
@@ -88,6 +89,9 @@ public class FrmReserva extends frmAbstract<Reserva> implements Serializable {
     // SE NECESITARA IR A TRAER LAS CARACTERISTICAS DE LOS ESPACIOS
     @Inject
     EspacioCaracteristicaBean terBean;
+    
+    @Inject
+    comparadorFechas valFechas;
 
     // VARIABLES
     int idAreaSeleccionada;
