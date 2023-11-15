@@ -11,11 +11,14 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author daniloues
- */
-public class comparadorFechas {
+
+
+public class comparadorFechas{
+    public static boolean fechaValida(Date date) {
+            // Convertir a la zona local
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime localDateTime = date.toInstant().atZone(zoneId).toLocalDateTime();
+
 
     public static boolean fechaValida(Date date) {
         // Convertir a la zona local
@@ -72,15 +75,19 @@ public class comparadorFechas {
         return false;
     }
 
-    public static boolean ValidarRangoFechas(Date desde, Date hasta) {
+
+    
+    
+    //Premisa DESDE --> HASTA
+    public boolean ValidarRangoFechas (Date desde, Date hasta){
         //Verficacion de fechas validas
-        if (fechaValida(desde) && fechaValida(hasta)) {
+        if(fechaValida(desde) && fechaValida(hasta)){
             //Convertir a hora local
             LocalDateTime fechaDesde = desde.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime fechaHasta = hasta.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-
+            
+            //Verificar DESDE --> HASTA
             return !fechaHasta.isBefore(fechaDesde);
-
         } else {
             return false;
         }
